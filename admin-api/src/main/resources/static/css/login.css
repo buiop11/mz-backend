@@ -1,0 +1,273 @@
+@charset "utf-8";
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol,
+ul {
+    list-style: none;
+}
+blockquote,
+q {
+    quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+body {
+    font-size: 18px;
+    color: #42424d;
+}
+img {
+    max-width: 100%;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+button {
+    border: none;
+    cursor: pointer;
+}
+input[type='file'] {
+    cursor: pointer;
+}
+textarea {
+    font-family: 'Noto Sans KR', 'Arial', 'Apple SD Gothic Neo', sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+textarea::-webkit-input-placeholder {
+    color: #b4b4b4;
+}
+textarea:-ms-input-placeholder {
+    color: #b4b4b4;
+}
+
+input {
+    font-family: 'Noto Sans KR', 'Arial', 'Apple SD Gothic Neo', sans-serif;
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+}
+input::-webkit-input-placeholder {
+    color: #b4b4b4;
+}
+input:-ms-input-placeholder {
+    color: #b4b4b4;
+}
+::selection {
+    background-color: #5c4c75;
+    color: #fff;
+}
+.blind,
+legend,
+caption {
+    position: absolute !important;
+    left: -9999px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    text-indent: -9999px;
+    font: 0/0 a;
+}
+
+/* Login */
+
+.login-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #dadaed;
+}
+.login {
+    width: 600px;
+    padding: 50px 50px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0.46875rem 2.1875rem rgb(4 9 20 / 3%),
+    0 0.9375rem 1.40625rem rgb(4 9 20 / 3%),
+    0 0.25rem 0.53125rem rgb(4 9 20 / 5%), 0 0.125rem 0.1875rem rgb(4 9 20 / 3%);
+}
+.login-title {
+    margin-bottom: 40px;
+    font-size: 36px;
+    color: #222330;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Arial', sans-serif;
+
+}
+.login-title small {
+    display: block;
+    margin-top: 12px;
+    font-size: 11px;
+    color: #9ca3ab;
+    letter-spacing: 11px;
+    text-transform: uppercase;
+    text-indent: 11px;
+}
+.login-form input {
+    width: 100%;
+    height: 36px;
+    padding: 0 8px;
+    border:1px solid #ccc;
+    border-radius: 2px;
+    box-sizing: border-box;
+}
+.login-form .row + .row {
+    margin-top: 5px;
+}
+
+.btn-login {
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid #9317f3;
+    color: #9317f3;
+    background: #fff;
+    padding: 0 20px;
+    height: 48px;
+    font-size: 16px;
+    border-radius: 2px;
+}
+.fa-user,
+.fa-lock {
+    margin-right: 15px;
+    color: #9ca3ab;
+}
+.error-msg {
+    margin-top: 5px;
+    color: #f53b32;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 500;
+}
+
+._input {
+    font-family: 'Noto Sans KR', 'Arial', 'Apple SD Gothic Neo', sans-serif;
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+}
+
+._checkbox {
+    margin-top:20px;
+    padding: 0 8px;
+    border:1px solid #ccc;
+    border-radius: 2px;
+    box-sizing: border-box;
+}

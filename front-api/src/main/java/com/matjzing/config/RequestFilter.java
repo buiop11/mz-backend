@@ -1,0 +1,30 @@
+package com.matjzing.config;
+
+import com.matjzing.util.FilterUtil;
+import org.springframework.context.annotation.Configuration;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+@Configuration
+public class RequestFilter extends FilterUtil implements Filter  {
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		String path = ((HttpServletRequest) request).getServletPath();
+		if (isFilterWhiteList(path)) {
+			chain.doFilter(request, response);
+		} else {
+			RereadableRequestWrapper rereadableRequestWrapper = new RereadableRequestWrapper((HttpServletRequest)request);
+			chain.doFilter(rereadableRequestWrapper, response);
+		}
+	}
+
+	@Override
+	public void destroy() {}
+
+	@Override
+	public void init(FilterConfig config) {}
+
+}

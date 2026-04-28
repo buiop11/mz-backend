@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.matjzing.mapper.AdminLoginMapper">
+
+    <sql id="selectLoginSelect">
+        MANAGER_SEQ /*관리자_시퀀스*/
+        , MANAGER_ID /*관리자_아이디*/
+        , PASSWORD /*비밀번호*/
+        , PASSWORD_CHANGE_DT /*비밀번호_변경_일시*/
+        , PASSWORD_INIT_YN /*비밀번호_초기화_여부*/
+        , NAME /*이름*/
+        , MOBILE_PHONE_NO /*휴대폰번호*/
+    </sql>
+
+    <sql id="selectLoginWhere">
+        WHERE
+            USE_YN = TRUE
+            AND MANAGER_ID = #{managerId}
+    </sql>
+
+    <select id="findByUserId" parameterType="String" resultType="user">
+        /* com.matjzing.AdminMemberMapper.findByUserId */
+        SELECT
+        MANAGER_ID AS userId
+        , PASSWORD
+        , NAME AS username
+        FROM
+        MANAGER
+        <include refid="selectLoginWhere"/>
+    </select>
+
+    <!-- 회원 List 조회 -->
+    <select id="selectLogin" parameterType="adminLoginRequest" resultType="adminLoginSelectResponse">
+        /* com.matjzing.AdminLoginMapper.selectLogin */
+        SELECT
+        <include refid="selectLoginSelect"/>
+        FROM
+        MANAGER
+        <include refid="selectLoginWhere"/>
+    </select>
+
+    <select id="selectManager" parameterType="adminLoginRequest" resultType="adminLoginSelectResponse">
+        /* com.matjzing.AdminLoginMapper.selectManager */
+        SELECT
+        <include refid="selectLoginSelect"/>
+        FROM
+        MANAGER
+        WHERE
+        MANAGER_SEQ = #{managerSeq}
+    </select>
+
+    <update id="updateLoginInfo" parameterType="adminLoginRequest">
+        /* com.matjzing.AdminLoginMapper.updateLoginInfo */
+        UPDATE
+            MANAGER
+        SET
+            UPDATER_SEQ = #{updaterSeq}
+          , UPDATE_DT = NOW(3)
+          , UPDATER_IP = #{updaterIp}
+          , RECENT_LOGIN_DT = NOW(3)
+        WHERE
+            MANAGER_SEQ = #{managerSeq}
+    </update>
+
+    <!-- 비밀번호 찾기 -->
+    <!-- <select id="findPassword" parameterType="adminFindPasswordRequest" resultType="adminFindPasswordResponse">
+        /* com.matjzing.AdminMemberMapper.findPassword */
+        SELECT
+            MANAGER_SEQ
+        FROM MANAGER
+        WHERE
+            NAME = #{name}
+          AND MANAGER_ID = #{managerId}
+          AND MOBILE_PHONE_NO = #{mobilePhoneNo}
+    </select> -->
+
+    <!-- 비밀번호 변경 -->
+    <!-- <update id="updatePassword" parameterType="adminUpdatePasswordRequest">
+        /* com.matjzing.AdminLoginMapper.updatePassword */
+        UPDATE
+            MANAGER
+        SET
+            UPDATER_SEQ = #{managerSeq}
+          , UPDATE_DT = NOW(3)
+          , UPDATER_IP = #{updaterIp}
+          , RECENT_LOGIN_DT = NOW(3)
+          , PASSWORD_CHANGE_DT = NOW(3)
+          , PASSWORD_INIT_YN = FALSE
+          , PASSWORD = #{password}
+        WHERE
+            MANAGER_SEQ = #{managerSeq}
+    </update> -->
+
+</mapper>

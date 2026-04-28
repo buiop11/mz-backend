@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.matjzing.mapper.SwaggerUserMapper">
+	
+	<!-- SWAGGER_회원 Page 조회 -->
+	<select id="selectSwaggerUserPage" parameterType="swaggerUserSelectPageRequest" resultType="swaggerUserSelectPageResponse">
+		/* com.matjzing.mapper.SwaggerUserMapper.selectSwaggerUserPage */
+		SELECT
+			  MEMBER_SEQ /*회원_시퀀스*/
+			, ID /*ID*/
+			, PASSWORD /*비밀번호*/
+			, NAME /*이름*/
+			, USE_YN /*사용_여부*/
+			, REGISTER_SEQ /*등록자_시퀀스*/
+			, REGISTER_IP /*등록자_아이피*/
+			, REGISTRATION_DT /*등록_일시*/
+			, UPDATER_SEQ /*수정자_시퀀스*/
+			, UPDATER_IP /*수정자_아이피*/
+			, UPDATE_DT /*수정_일시*/
+		FROM
+			SWAGGER_MEMBER
+	</select>
+
+
+	<!-- SWAGGER_회원 상세 조회 -->
+	<select id="selectSwaggerUser" parameterType="swaggerUserSelectRequest" resultType="swaggerUserSelectResponse">
+		/* com.matjzing.mapper.SwaggerUserMapper.selectSwaggerUser */
+		SELECT
+			  MEMBER_SEQ /*회원_시퀀스*/
+			, ID /*ID*/
+			, PASSWORD /*비밀번호*/
+			, NAME /*이름*/
+			, USE_YN /*사용_여부*/
+			, REGISTER_SEQ /*등록자_시퀀스*/
+			, REGISTER_IP /*등록자_아이피*/
+			, REGISTRATION_DT /*등록_일시*/
+			, UPDATER_SEQ /*수정자_시퀀스*/
+			, UPDATER_IP /*수정자_아이피*/
+			, UPDATE_DT /*수정_일시*/
+		FROM
+			SWAGGER_MEMBER
+		WHERE
+			MEMBER_SEQ = #{memberSeq}
+	</select>
+
+	<!-- SWAGGER_회원 등록 -->
+	<insert id="insertSwaggerUser" parameterType="swaggerUserInsertRequest">
+		/* com.matjzing.mapper.SwaggerUserMapper.insertSwaggerUser */
+		INSERT INTO SWAGGER_MEMBER (
+			  ID /*ID*/
+			, PASSWORD /*비밀번호*/
+			, NAME /*이름*/
+			, USE_YN /*사용_여부*/
+			, REGISTER_SEQ /*등록자_시퀀스*/
+			, REGISTER_IP /*등록자_아이피*/
+			, REGISTRATION_DT /*등록_일시*/
+			, UPDATER_SEQ /*수정자_시퀀스*/
+			, UPDATER_IP /*수정자_아이피*/
+			, UPDATE_DT /*수정_일시*/
+		) VALUES (
+			  #{id}
+			, #{password}
+			, #{name}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- SWAGGER_회원 수정 -->
+    <update id="updateSwaggerUser" parameterType="swaggerUserUpdateRequest">
+		/* com.matjzing.mapper.SwaggerUserMapper.updateSwaggerUser */
+    	UPDATE SWAGGER_MEMBER SET
+			  UPDATER_SEQ = #{updaterSeq}
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3)
+			, PASSWORD = #{password} /*비밀번호*/
+		WHERE
+			MEMBER_SEQ = #{memberSeq}
+	</update>
+
+	<!-- SWAGGER_회원 삭제 -->
+    <update id="deleteSwaggerUser" parameterType="swaggerUserDeleteRequest">
+		/* com.matjzing.mapper.SwaggerUserMapper.deleteSwaggerUser */
+    	UPDATE SWAGGER_MEMBER SET
+			  UPDATER_SEQ = #{updaterSeq}
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3)
+			, USE_YN = FALSE
+		WHERE
+			MEMBER_SEQ = #{memberSeq}
+	</update>
+
+	<select id="selectLogin" parameterType="swaggerLoginRequest" resultType="swaggerLoginSelectResponse">
+		/* com.matjzing.SwaggerUserMapper.selectLogin */
+		SELECT
+			MEMBER_SEQ /*회원_시퀀스*/
+		FROM
+			SWAGGER_MEMBER
+		WHERE
+			USE_YN = TRUE
+			AND ID = #{id}
+			AND PASSWORD = #{password}
+	</select>
+
+</mapper>

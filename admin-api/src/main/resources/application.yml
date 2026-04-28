@@ -1,0 +1,55 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  profiles:
+    active: local
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  thymeleaf:
+    cache: false
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+
+mybatis:
+  configuration:
+    multiple-result-sets-enabled: false
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    jdbc-type-for-null: varchar
+    default-fetch-size: 500
+  mapper-locations:
+    classpath: mybatis/mapper/*.xml
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+
+jwt:
+  header: Authorization
+  refresh-header: refreshToken
+  prefix: "Bearer "
+  #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
+  secret: 0zk6p0LwOxBFAdZDPwIwuDT4fSS5vn844WrNVXkAHM9v3LmwdWQfp0x1biYJLBccQ99T8CaOmA9tQGl6BUZBM76sUta8yxiQaxh3vHrMtFszr8zJFUlpMzaWY04MLiAs
+  # 토큰 유지시간 분단위 입력
+  token-validity-in-seconds:
+    #토큰 유지시간 (60 * 24, 1일)
+    access: 1440
+    #토큰 유지시간 (60 * 24 * 30, 30일)
+    refresh: 43200
+
+redis:
+  timeout:
+    com02: 24
+
+# todo 도메인 추가
+cookie-domain: .emotion.co.kr

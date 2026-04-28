@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.matjzing.mapper.AdminNoticeMapper">
+
+    <select id="selectAdminNoticeList" parameterType="adminNoticeSelectListRequest" resultType="adminNoticeSelectListResponse">
+        /* com.matjzing.mapper.AdminNoticeMapper.selectAdminNoticeList */
+        SELECT
+              TITLE
+            , CONTENT
+            , DISPLAY_DT
+            , DISPLAY_YN
+            , FIXED_YN
+            , VIEW_COUNT
+            , USE_YN
+            , REGISTER_SEQ
+            , REGISTER_IP
+            , REGISTRATION_DT
+            , UPDATER_SEQ
+            , UPDATER_IP
+            , UPDATE_DT
+        FROM NOTICE
+    </select>
+
+    <select id="selectAdminNoticePage" parameterType="adminNoticeSelectPageRequest" resultType="adminNoticeSelectPageResponse">
+        /* com.matjzing.mapper.AdminNoticeMapper.selectAdminNoticePage */
+        SELECT
+              NOTICE_SEQ
+            , TITLE
+            , CONTENT
+            , DISPLAY_DT
+            , DISPLAY_YN
+            , FIXED_YN
+            , VIEW_COUNT
+            , USE_YN
+            , REGISTER_SEQ
+            , REGISTER_IP
+            , REGISTRATION_DT
+            , UPDATER_SEQ
+            , UPDATER_IP
+            , UPDATE_DT
+        FROM NOTICE
+    </select>
+
+    <select id="selectAdminNotice" parameterType="adminNoticeSelectRequest" resultType="adminNoticeSelectResponse">
+        /* com.matjzing.mapper.AdminNoticeMapper.selectAdminNotice */
+        SELECT
+              NOTICE_SEQ
+            , TITLE
+            , CONTENT
+            , DISPLAY_DT
+            , DISPLAY_YN
+            , FIXED_YN
+            , VIEW_COUNT
+            , USE_YN
+            , REGISTER_SEQ
+            , REGISTER_IP
+            , REGISTRATION_DT
+            , UPDATER_SEQ
+            , UPDATER_IP
+            , UPDATE_DT
+        FROM NOTICE
+        WHERE NOTICE_SEQ = #{noticeSeq}
+    </select>
+
+    <insert id="insertAdminNotice" parameterType="adminNoticeInsertRequest" useGeneratedKeys="true" keyProperty="noticeSeq">
+        /* com.matjzing.mapper.AdminNoticeMapper.insertAdminNotice */
+        INSERT INTO NOTICE (
+              TITLE
+            , CONTENT
+            , DISPLAY_DT
+            , DISPLAY_YN
+            , FIXED_YN
+            , VIEW_COUNT
+            , USE_YN
+            , REGISTER_SEQ
+            , REGISTER_IP
+            , REGISTRATION_DT
+            , UPDATER_SEQ
+            , UPDATER_IP
+            , UPDATE_DT
+        ) VALUES (
+              #{title}
+            , #{content}
+            , #{displayDt}
+            , #{displayYn}
+            , #{fixedYn}
+            , #{viewCount}
+            , TRUE
+            , #{registerSeq}
+            , #{registerIp}
+            , NOW(3)
+            , #{updaterSeq}
+            , #{updaterIp}
+            , NOW(3)
+        )
+    </insert>
+
+    <update id="updateAdminNotice" parameterType="adminNoticeUpdateRequest">
+        /* com.matjzing.mapper.AdminNoticeMapper.updateAdminNotice */
+        UPDATE NOTICE SET
+              UPDATER_SEQ = #{updaterSeq}
+            , UPDATER_IP = #{updaterIp}
+            , UPDATE_DT = NOW(3)
+            , TITLE = #{title}
+            , CONTENT = #{content}
+            , DISPLAY_DT = #{displayDt}
+            , DISPLAY_YN = #{displayYn}
+            , FIXED_YN = #{fixedYn}
+            , VIEW_COUNT = #{viewCount}
+        WHERE NOTICE_SEQ = #{noticeSeq}
+    </update>
+
+    <update id="deleteAdminNotice" parameterType="adminNoticeDeleteRequest">
+        /* com.matjzing.mapper.AdminNoticeMapper.deleteAdminNotice */
+        UPDATE NOTICE SET
+              UPDATER_SEQ = #{updaterSeq}
+            , UPDATER_IP = #{updaterIp}
+            , UPDATE_DT = NOW(3)
+            , USE_YN = FALSE
+        WHERE NOTICE_SEQ = #{noticeSeq}
+    </update>
+
+</mapper>

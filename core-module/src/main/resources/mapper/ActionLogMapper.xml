@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.matjzing.mapper.ActionLogMapper">
+
+	<!-- 회원_활동_로그 등록 -->
+	<insert id="insertMemberActionLog" parameterType="actionLogInsertRequest">
+		/* com.matjzing.mapper.ActionLogMapper.insertMemberActionLog */
+		INSERT INTO MEMBER_ACTION_LOG (
+			  MEMBER_SEQ /*회원_시퀀스*/
+			, OS_SECTION_CD /*OS_구분_코드*/
+			, REQUEST_METHOD_CD /*요청_메소드_코드*/
+			, REQUEST_URL /*요청_URL*/
+			, EXECUTION_TIME /*실행_시간*/
+			, USE_YN /*사용_여부*/
+			, REGISTER_SEQ /*등록자_시퀀스*/
+			, REGISTER_IP /*등록자_아이피*/
+			, REGISTRATION_DT /*등록_일시*/
+			, UPDATER_SEQ /*수정자_시퀀스*/
+			, UPDATER_IP /*수정자_아이피*/
+			, UPDATE_DT /*수정_일시*/
+		) VALUES (
+			  #{registerSeq}
+			, #{osSectionCd}
+			, #{requestMethodCd}
+			, #{requestUrl}
+			, #{executionTime}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 관리자_활동_로그 등록 -->
+	<insert id="insertManagerActionLog" parameterType="actionLogInsertRequest">
+		/* com.matjzing.mapper.ActionLogMapper.insertManagerActionLog */
+		INSERT INTO MANAGER_ACTION_LOG (
+			  MANAGER_SEQ /*관리자_시퀀스*/
+			, REQUEST_METHOD_CD /*요청_메소드_코드*/
+			, REQUEST_URL /*요청_URL*/
+			, EXECUTION_TIME /*실행_시간*/
+			, USE_YN /*사용_여부*/
+			, REGISTER_SEQ /*등록자_시퀀스*/
+			, REGISTER_IP /*등록자_아이피*/
+			, REGISTRATION_DT /*등록_일시*/
+			, UPDATER_SEQ /*수정자_시퀀스*/
+			, UPDATER_IP /*수정자_아이피*/
+			, UPDATE_DT /*수정_일시*/
+		) VALUES (
+			  #{registerSeq}
+			, #{requestMethodCd}
+			, #{requestUrl}
+			, #{executionTime}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+</mapper>

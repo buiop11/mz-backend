@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.matjzing.mapper.FrontLoginMapper">
+
+    <sql id="selectLoginSelect">
+        MEMBER_SEQ /*회원_시퀀스*/
+        , MEMBER_TYPE_CD /*회원_유형_코드*/
+        , ID /*ID*/
+        , PASSWORD /*비밀번호*/
+        , PASSWORD_CHANGE_DT /*비밀번호_변경_일시*/
+        , NAME /*이름*/
+        , NICKNAME /*이름*/
+        , MOBILE_PHONE_NO /*휴대폰번호*/
+        , RECENT_LOGIN_DT /*최근_로그인_일시*/
+        , RECENT_CONNECTION_DT /*최근_접속_일시*/
+        , MEMBER_STATUS_CD /*회원_상태_코드*/
+        , MEMBER_TYPE_CD /*회원_유형_코드*/
+        , LOGIN_FAILURE_COUNT /*로그인_실패_횟수*/
+        , DI /*DI*/
+    </sql>
+
+    <sql id="selectLoginWhere">
+        WHERE
+        USE_YN = TRUE
+        AND ID = #{id}
+        <if test="@com.matjzing.util.MapperUtil@isNotEmpty(di)">
+            AND DI = #{di}
+        </if>
+    </sql>
+
+    <select id="findByUserId" parameterType="String" resultType="user">
+        /* com.matjzing.FrontMemberMapper.findByUserId */
+        SELECT
+              ID AS userId
+            , PASSWORD
+            , NAME AS username
+        FROM
+            MEMBER
+        WHERE
+            USE_YN = TRUE
+            AND ID = #{id}
+
+        UNION ALL
+
+        SELECT
+              ID AS userId
+            , PASSWORD
+            , NAME AS username
+        FROM
+            DORMANCY_MEMBER
+        WHERE
+            USE_YN = TRUE
+            AND ID = #{id}
+    </select>
+
+    <select id="selectLogin" parameterType="frontLoginRequest" resultType="frontLoginSelectResponse">
+        /* com.matjzing.FrontLoginMapper.selectLogin */
+        SELECT
+            <include refid="selectLoginSelect"/>
+        FROM
+            MEMBER
+        <include refid="selectLoginWhere"/>
+
+        UNION ALL
+
+        SELECT
+            <include refid="selectLoginSelect"/>
+        FROM
+            DORMANCY_MEMBER
+        <include refid="selectLoginWhere"/>
+    </select>
+
+    <select id="selectLoginByDi" parameterType="frontLoginRequest" resultType="frontLoginSelectResponse">
+        /* com.matjzing.FrontLoginMapper.selectLoginByDi */
+        SELECT
+            <include refid="selectLoginSelect"/>
+        FROM
+            MEMBER
+        WHERE DI = #{di}
+
+        UNION ALL
+
+        SELECT
+            <include refid="selectLoginSelect"/>
+        FROM
+            DORMANCY_MEMBER
+        WHERE DI = #{di}
+    </select>
+
+    <select id="selectMember" parameterType="frontLoginRequest" resultType="frontLoginSelectResponse">
+        /* com.matjzing.FrontLoginMapper.selectMember */
+        SELECT
+            <include refid="selectLoginSelect"/>
+        FROM
+            MEMBER
+        WHERE
+            USE_YN = TRUE
+        AND MEMBER_SEQ = #{memberSeq}
+    </select>
+
+    <!-- <select id="findId" resultType="frontMemberFindIdResponse">
+        /* com.matjzing.FrontLoginMapper.findId */
+        SELECT
+            MEMBER_TYPE_CD, ID, EMAIL
+        FROM
+            MEMBER
+        WHERE
+            USE_YN = TRUE
+            AND DI = #{di}
+
+        UNION ALL
+
+        SELECT
+            MEMBER_TYPE_CD, ID, EMAIL
+        FROM
+            DORMANCY_MEMBER
+        WHERE
+            USE_YN = TRUE
+            AND DI = #{di}
+    </select> -->
+
+    <!-- <update id="updatePasswordByDi" parameterType="frontMemberPasswordUpdateByDiRequest">
+        /* com.matjzing.FrontLoginMapper.updatePasswordByDi */
+        UPDATE MEMBER SET
+              UPDATE_DT = NOW(3)
+            , PASSWORD = #{newPassword}
+            , PASSWORD_CHANGE_DT = NOW(3)
+            , LOGIN_FAILURE_COUNT = 0
+        WHERE
+            USE_YN = TRUE
+            AND DI = #{di}
+    </update> -->
+
+    <!-- <update id="updateDormancyPasswordByDi" parameterType="frontMemberPasswordUpdateByDiRequest">
+        /* com.matjzing.FrontLoginMapper.updateDormancyPasswordByDi */
+        UPDATE DORMANCY_MEMBER SET
+              UPDATE_DT = NOW(3)
+            , PASSWORD = #{newPassword}
+            , PASSWORD_CHANGE_DT = NOW(3)
+        WHERE
+            USE_YN = TRUE
+            AND DI = #{di}
+    </update> -->
+
+    <update id="updateRestoreMember" parameterType="frontLoginRequest">
+        /* com.matjzing.FrontLoginMapper.updateRestoreMember */
+        UPDATE MEMBER A
+            INNER JOIN DORMANCY_MEMBER B ON A.MEMBER_SEQ = B.MEMBER_SEQ
+        SET
+              A.UPDATE_DT = NOW(3)
+            , A.CI = B.CI
+            , A.DI = B.DI
+            , A.ID = B.ID
+            , A.GENDER_CD = B.GENDER_CD
+            , A.PASSWORD = B.PASSWORD
+            , A.PASSWORD_CHANGE_DT = B.PASSWORD_CHANGE_DT
+            , A.NAME = B.NAME
+            , A.NICKNAME = B.NICKNAME
+            , A.MOBILE_PHONE_NO = B.MOBILE_PHONE_NO
+            , A.BIRTHDAY = B.BIRTHDAY
+            , A.MEMBER_STATUS_CD = 'NORMAL'
+            , A.MEMBER_STATUS_CHANGE_DT = NOW(3)
+            , A.BIRTHDAY = B.BIRTHDAY
+        WHERE
+            A.MEMBER_SEQ = #{memberSeq}
+    </update>
+
+    <delete id="deleteDormancyMember" parameterType="frontLoginRequest">
+        /* com.matjzing.FrontLoginMapper.deleteDormancyMember */
+        DELETE FROM DORMANCY_MEMBER WHERE MEMBER_SEQ = #{memberSeq}
+    </delete>
+
+    <insert id="insertDormancyMember" parameterType="commonMemberSelectRequest">
+        /* com.matjzing.FrontLoginMapper.insertDormancyMember */
+        INSERT INTO DORMANCY_MEMBER (
+              MEMBER_SEQ, MEMBER_TYPE_CD, ID, CI, DI, GENDER_CD , TELECOM_SECTION_CD
+            , NATIVE_SECTION_CD, PASSWORD, PASSWORD_CHANGE_DT, NAME, NICKNAME
+            , INTRODUCTION, MOBILE_PHONE_NO, EMAIL, BIRTHDAY, JOIN_DT, RECENT_LOGIN_DT
+            , RECENT_CONNECTION_DT, MEMBER_STATUS_CD, MEMBER_STATUS_CHANGE_DT
+            , AUTO_LOGIN_YN, APP_VERSION, OS_VERSION, OS_SECTION_CD, DEVICE_MODEL_NAME
+            , DEVICE_MARKETING_NO, APP_PUSH_VALUE, SERVICE_TERMS_AGREE_YN
+            , SERVICE_TERMS_AGREE_DT, PERSONAL_INFO_USE_AGREE_YN, PERSONAL_INFO_USE_AGREE_DT
+            , MARKETING_USE_AGREE_YN, MARKETING_USE_AGREE_DT, USE_YN, REGISTER_SEQ
+            , REGISTER_IP, REGISTRATION_DT, UPDATER_SEQ, UPDATER_IP, UPDATE_DT
+            , DORMANCY_CONVERSION_DT
+        )
+        SELECT
+              MEMBER_SEQ, MEMBER_TYPE_CD, ID, CI, DI, GENDER_CD, TELECOM_SECTION_CD
+             , NATIVE_SECTION_CD, PASSWORD, PASSWORD_CHANGE_DT, NAME, NICKNAME
+             , INTRODUCTION, MOBILE_PHONE_NO, EMAIL, BIRTHDAY, JOIN_DT, RECENT_LOGIN_DT
+             , RECENT_CONNECTION_DT, 'DORMANCY', #{memberStatusChangeDt}
+             , AUTO_LOGIN_YN, APP_VERSION, OS_VERSION, OS_SECTION_CD, DEVICE_MODEL_NAME
+             , DEVICE_MARKETING_NO, APP_PUSH_VALUE, SERVICE_TERMS_AGREE_YN
+             , SERVICE_TERMS_AGREE_DT, PERSONAL_INFO_USE_AGREE_YN, PERSONAL_INFO_USE_AGREE_DT
+             , MARKETING_USE_AGREE_YN, MARKETING_USE_AGREE_DT, USE_YN, REGISTER_SEQ
+             , REGISTER_IP, REGISTRATION_DT, UPDATER_SEQ, UPDATER_IP, UPDATE_DT
+             , NOW(3)
+        FROM
+            MEMBER
+        WHERE
+            MEMBER_SEQ = #{memberSeq}
+    </insert>
+
+    <update id="updateDormancyMember" parameterType="commonMemberSelectRequest">
+        /* com.matjzing.FrontLoginMapper.updateDormancyMember */
+        UPDATE MEMBER SET
+              UPDATER_SEQ = #{updaterSeq}
+            , UPDATE_DT = NOW(3)
+            , UPDATER_IP = #{updaterIp}
+            , CI = #{memberSeq}
+            , DI = #{memberSeq}
+            , ID = #{memberSeq}
+            , GENDER_CD = '-'
+            , PASSWORD = #{password}
+            , NAME = '-'
+            , NICKNAME = '-'
+            , MOBILE_PHONE_NO = '-'
+            , EMAIL = '-'
+            , MEMBER_STATUS_CD = 'DORMANCY'
+            , MEMBER_STATUS_CHANGE_DT = #{memberStatusChangeDt}
+            , BIRTHDAY = '-'
+        WHERE
+            MEMBER_SEQ = #{memberSeq}
+    </update>
+
+    <update id="updateLoginFailureCount" parameterType="commonMemberSelectRequest">
+        /* com.matjzing.FrontLoginMapper.updateLoginFailureCount */
+        UPDATE MEMBER SET
+              UPDATER_SEQ = #{updaterSeq}
+            , UPDATE_DT = NOW(3)
+            , UPDATER_IP = #{updaterIp}
+            , LOGIN_FAILURE_COUNT = #{loginFailureCount}
+        WHERE
+            MEMBER_SEQ = #{memberSeq}
+    </update>
+
+    <update id="updateMember" parameterType="frontLoginSelectResponse">
+        /* com.matjzing.FrontLoginMapper.updateMember */
+        UPDATE MEMBER SET
+              UPDATER_SEQ = #{memberSeq}
+            , UPDATE_DT = NOW(3)
+            , UPDATER_IP = #{updaterIp}
+            , LOGIN_FAILURE_COUNT = 0
+            , RECENT_LOGIN_DT = NOW(3)
+        <if test="@com.matjzing.util.MapperUtil@isNotEmpty(autoLoginYn)">
+            , AUTO_LOGIN_YN = #{autoLoginYn}
+        </if>
+        <if test="@com.matjzing.util.MapperUtil@isNotEmpty(deviceInfo)">
+            , APP_VERSION = #{deviceInfo.appVersion}
+            , OS_SECTION_CD = #{deviceInfo.osCd}
+            , OS_VERSION = #{deviceInfo.osVersion}
+            , DEVICE_MODEL_NAME = #{deviceInfo.deviceModelName}
+            , DEVICE_MARKETING_NO = #{deviceInfo.deviceMarketingNo}
+            , APP_PUSH_VALUE = #{deviceInfo.appPushValue}
+        </if>
+        WHERE
+        MEMBER_SEQ = #{memberSeq}
+    </update>
+
+    <!-- 로그인 이력 등록 -->
+    <!-- <insert id="insertLoginHistory" parameterType="frontLoginHistoryInsertRequest">
+        /* com.matjzing.FrontLoginHistoryMapper.insertLoginHistory */
+        INSERT INTO LOGIN_HISTORY (
+              MEMBER_SEQ /*회원_시퀀스*/
+            , APP_VERSION /*앱_버전*/
+            , OS_VERSION /*OS_버전*/
+            , REGISTER_SEQ /*등록자_시퀀스*/
+            , REGISTER_IP /*등록자_아이피*/
+            , REGISTRATION_DT /*등록_일시*/
+        ) VALUES (
+              #{memberSeq}
+            , #{appVersion}
+            , #{osVersion}
+            , #{registerSeq}
+            , #{registerIp}
+            , NOW(3)
+        )
+    </insert> -->
+
+    <select id="selectDormancyMember" parameterType="frontLoginRequest" resultType="frontLoginSelectResponse">
+        /* com.matjzing.FrontLoginMapper.selectDormancyMember */
+        SELECT
+            <include refid="selectLoginSelect"/>
+        FROM
+            DORMANCY_MEMBER
+        WHERE
+            USE_YN = TRUE
+            AND MEMBER_SEQ = #{memberSeq}
+    </select>
+
+    <update id="deleteSecessionMember" parameterType="String">
+        /* com.matjzing.FrontMemberMapper.deleteSecessionMember */
+        UPDATE SECESSION_MEMBER SET
+              CI = MEMBER_SEQ
+            , DI = MEMBER_SEQ
+            , ID = MEMBER_SEQ
+        WHERE MOBILE_PHONE_NO = #{encMobilePhoneNo}
+    </update>
+
+    <select id="deleteTokenSecessionMember" parameterType="Long" resultType="frontLoginSelectResponse">
+        /* com.matjzing.FrontLoginMapper.deleteTokenSecessionMember */
+        SELECT
+            MEMBER_SEQ
+        FROM
+            SECESSION_MEMBER
+        WHERE
+            MEMBER_STATUS_CD = 'SECESSION'
+            AND CI != #{memberSeq}
+            AND MEMBER_SEQ = #{seq}
+    </select>
+
+</mapper>

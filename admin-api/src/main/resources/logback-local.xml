@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%logger{36}] [%-5level] - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <!-- Loggers -->
+    <logger name="com.matjzing" level="DEBUG" />
+    <logger name="com.zaxxer.hikari" level="INFO" />
+    <logger name="jdbc.connection" level="OFF" />
+    <logger name="jdbc.sqltiming" level="INFO" />
+    <logger name="jdbc.sqlonly" level="INFO" />
+    <logger name="jdbc.resultset" level="ERROR" />
+    <logger name="jdbc.resultsettable" level="ERROR" />
+    <logger name="jdbc.audit" level="ERROR" />
+    <logger name="com" level="ERROR" />
+    <logger name="org" level="ERROR" />
+    <logger name="org.springframework" level="ERROR" />
+    <logger name="org.mybatis.spring.batch" level="DEBUG" />
+    <logger name="springfox.documentation" level="ERROR" />
+    <logger name="springframework" level="ERROR" />
+    <logger name="io.lettuce.core.protocol" level="INFO" />
+    <logger name="net.javacrumbs.shedlock" level="DEBUG" />
+
+    <root>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

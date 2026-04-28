@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>로그인</title>
+    <script src="/js/jquery.js"></script>
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login">
+        <h1 class="login-title">Swagger Login</h1>
+        <form class="login-form" id="myForm">
+            <div class="row">
+                <input type="text" id="id" name="id" placeholder="아이디를 입력해주세요" required>
+            </div>
+            <div class="row">
+                <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
+            </div>
+            <button class="btn-primary-md btn-login" type="submit">Login</button>
+        </form>
+        <input type="checkbox" class="_checkbox" id="saveId"> <label for="saveId" class="_input">아이디 저장</label><br>
+        <span class="error-msg" id="error-msg"></span>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        let cookie = getCookie("swagger");
+        if (hasText(cookie)) {
+            location.replace("/swagger-ui.html");
+            return;
+        }
+
+        let saveId = localStorage.getItem("id");
+        if (saveId !== "" && saveId !== null && saveId !== undefined) {
+            $('#id').val(saveId);
+            $('#saveId').prop("checked", true);
+        }
+    });
+
+    $("#myForm").submit(function(event) {
+        event.preventDefault(); // 기본 제출 동작 막기
+
+        let id = $('#id').val();
+        let password = $('#password').val();
+
+        if (id.trim() == "" || password.trim() == "") {
+            alert("아이디 혹은 비밀번호를 입력해주세요.");
+            return;
+        }
+
+        // Ajax 요청 생성
+        $.ajax({
+            url: "/login",
+            type: "POST",
+            data: JSON.stringify({id: id, password: password}),
+            dataType: "json",
+            processData: false,
+            // contentType: false,
+            contentType: "application/json",
+            success: function() {
+                if ($("#saveId").is(":checked")) {
+                    localStorage.setItem("id", id);
+                } else {
+                    localStorage.clear();
+                }
+                location.replace("/swagger-ui.html");
+            },
+            error: function(xhr, status, error) {
+                // 오류가 발생했을 때의 동작
+                $("#error-msg").text(xhr?.responseJSON?.message);
+            }
+        });
+    });
+
+    function getCookie(name) {
+        let cookies = document.cookie.split(';');
+        let cookieData = null;
+
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+
+            if (cookie.startsWith(name + "=")) {
+                let cookieValue = cookie.substring(name.length + 1);
+                cookieData = JSON.parse(cookieValue);
+                break;
+            }
+        }
+
+        return cookieData;
+    }
+
+    function isNull(str) {
+        return undefined === str || null === str;
+    }
+
+    function hasText(str) {
+        return !isNull(str) && str.trim().length > 0;
+    }
+
+</script>
+
+</body>
+</html>
