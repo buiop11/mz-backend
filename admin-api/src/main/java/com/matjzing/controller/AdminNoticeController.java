@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = TagsConfig.TAG_NOTICE_01)
-@RequestMapping("/api/notice")
+@RequestMapping("/api/v1/notice")
 public class AdminNoticeController {
 	
 	private final AdminNoticeService service;
