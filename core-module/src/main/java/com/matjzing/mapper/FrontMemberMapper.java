@@ -20,14 +20,11 @@ public interface FrontMemberMapper {
 
     int updatePassword(FrontMemberPasswordUpdateRequest req);
 
-    int updatePasswordLater(FrontMemberPasswordUpdateRequest req);
-
 //    int updatePassInfo(FrontMemberPassInfoUpdateRequest req);
 //
 //    FrontMemberSettingResponse selectSettingMemberDetail(CommonMemberSelectRequest req);
 
-    int updateMarketingUseAgreeYn(CommonMemberSelectRequest req);
-
-    int insertMarketingUseAgreeHistory(CommonMemberSelectRequest req);
+    /** Google 로그인 최초 가입(암묵적 가입) */
+    int insertMemberGoogle(FrontMemberGoogleInsertRequest req);
 
 }

@@ -34,6 +34,11 @@ pagehelper:
   helper-dialect: mysql
   reasonable: true
 
+# Google Sign-In (OIDC). 콤마로 여러 Client ID(aud) 허용 가능 (웹/안드/iOS 등).
+google:
+  oauth:
+    client-ids: ""
+
 jwt:
   header: Authorization
   refresh-header: refreshToken

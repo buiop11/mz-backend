@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * author: 김아진
+ * date: 2026-05-11
+ * pname: 관리자
+ * desc: 관리자 매퍼 XML 작성
+ -->
+<mapper namespace="com.matjzing.mapper.FrontCandidateMapper">
+	
+	<!-- 후보 List 조회 -->
+	<select id="selectFrontCandidateList" parameterType="frontCandidateSelectListRequest" resultType="frontCandidateSelectListResponse">
+        /* com.matjzing.mapper.FrontCandidateMapper.selectFrontCandidateList */
+		SELECT
+			  CANDIDATE_SEQ /**/
+			, TOPIC_SEQ /**/
+			, NAME /**/
+			, PRICE /**/
+			, IMAGE_URL /**/
+			, LINK_URL /**/
+			, IS_FIXED /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			CANDIDATE
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 후보 Page 조회 -->
+	<select id="selectFrontCandidatePage" parameterType="frontCandidateSelectPageRequest" resultType="frontCandidateSelectPageResponse">
+		/* com.matjzing.mapper.FrontCandidateMapper.selectFrontCandidatePage */
+		SELECT
+			  CANDIDATE_SEQ /**/
+			, TOPIC_SEQ /**/
+			, NAME /**/
+			, PRICE /**/
+			, IMAGE_URL /**/
+			, LINK_URL /**/
+			, IS_FIXED /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			CANDIDATE
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+
+	<!-- 후보 상세 조회 -->
+	<select id="selectFrontCandidate" parameterType="frontCandidateSelectRequest" resultType="frontCandidateSelectResponse">
+		/* com.matjzing.mapper.FrontCandidateMapper.selectFrontCandidate */
+		SELECT
+			  CANDIDATE_SEQ /**/
+			, TOPIC_SEQ /**/
+			, NAME /**/
+			, PRICE /**/
+			, IMAGE_URL /**/
+			, LINK_URL /**/
+			, IS_FIXED /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			CANDIDATE
+		WHERE
+			CANDIDATE_SEQ = #{candidateSeq}
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 후보 등록 -->
+	<insert id="insertFrontCandidate" parameterType="frontCandidateInsertRequest" useGeneratedKeys="true" keyProperty="candidateSeq">
+		/* com.matjzing.mapper.FrontCandidateMapper.insertFrontCandidate */
+		INSERT INTO CANDIDATE (
+			  TOPIC_SEQ /**/
+			, NAME /**/
+			, PRICE /**/
+			, IMAGE_URL /**/
+			, LINK_URL /**/
+			, IS_FIXED /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		) VALUES (
+			  #{topicSeq}
+			, #{name}
+			, #{price}
+			, #{imageUrl}
+			, #{linkUrl}
+			, #{isFixed}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 후보 수정 -->
+    <update id="updateFrontCandidate" parameterType="frontCandidateUpdateRequest">
+		/* com.matjzing.mapper.FrontCandidateMapper.updateFrontCandidate */
+    	UPDATE CANDIDATE SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, TOPIC_SEQ = #{topicSeq} /**/
+			, NAME = #{name} /**/
+			, PRICE = #{price} /**/
+			, IMAGE_URL = #{imageUrl} /**/
+			, LINK_URL = #{linkUrl} /**/
+			, IS_FIXED = #{isFixed} /**/
+		WHERE
+			CANDIDATE_SEQ = #{candidateSeq}
+	</update>
+
+	<!-- 후보 삭제 -->
+    <update id="deleteFrontCandidate" parameterType="frontCandidateDeleteRequest">
+		/* com.matjzing.mapper.FrontCandidateMapper.deleteFrontCandidate */
+    	UPDATE CANDIDATE SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, USE_YN = FALSE
+		WHERE
+			CANDIDATE_SEQ = #{candidateSeq}
+	</update>
+
+</mapper>

@@ -27,6 +27,7 @@ public class SecurityConfig {
 			, "/login"					    // Swagger 로그인 API
 			, "/view/login"					// Swagger 로그인 페이지
 			, "/api/login"					// 로그인
+			, "/api/login/google"			// Google OIDC 로그인
 			, "/api/access-token"			// 엑세스토큰 갱신
 			, "/api/member"                 // 회원 가입
 			, "/api/member/check/id"        // 회원 가입시 아이디 중복체크
@@ -35,6 +36,18 @@ public class SecurityConfig {
 			, "/v3/api-docs/**" // ✅ OpenAPI 문서 접근 허용
 			, "/swagger-ui.html"
 			, "/v3/api-docs/swagger-config"
+
+			,"/api/vote"		// front 임시 이하 아래
+			,"/api/vote/**"
+			,"/api/topic"
+			,"/api/topic/**"
+			,"/api/groups"
+			,"/api/groups/**"
+			,"/api/excalendar"
+			,"/api/excalendar/**"
+			,"/api/category"
+			,"/api/candidate/**"
+			,"/api/candidate/**"
 	};
 
 	@Bean

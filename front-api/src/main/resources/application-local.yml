@@ -1,10 +1,10 @@
 # todo datasource, redis, file 경로 수정해야함
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/matjzing?autoReconnection=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowMultiQueries=true&noAccessToProcedureBodies=true   #JVM 옵션 셋팅 > -Ddb.url=[VALUE] -Ddb.name=[VALUE]
+    username: admin
+    password: new1234!
 
   data:
     redis:

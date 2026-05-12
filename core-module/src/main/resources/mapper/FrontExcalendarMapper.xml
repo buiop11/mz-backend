@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * author: 김아진
+ * date: 2026-05-11
+ * pname: 관리자
+ * desc: 관리자 매퍼 XML 작성
+ -->
+<mapper namespace="com.matjzing.mapper.FrontExcalendarMapper">
+	
+	<!-- 외부캘린더 List 조회 -->
+	<select id="selectFrontExcalendarList" parameterType="frontExcalendarSelectListRequest" resultType="frontExcalendarSelectListResponse">
+        /* com.matjzing.mapper.FrontExcalendarMapper.selectFrontExcalendarList */
+		SELECT
+			  CALENDAR_SEQ /**/
+			, USER_SEQ /**/
+			, GOOGLE_CAL_ID /**/
+			, ACCESS_TOKEN /**/
+			, REFRESH_TOKEN /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			EXCALENDAR
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 외부캘린더 Page 조회 -->
+	<select id="selectFrontExcalendarPage" parameterType="frontExcalendarSelectPageRequest" resultType="frontExcalendarSelectPageResponse">
+		/* com.matjzing.mapper.FrontExcalendarMapper.selectFrontExcalendarPage */
+		SELECT
+			  CALENDAR_SEQ /**/
+			, USER_SEQ /**/
+			, GOOGLE_CAL_ID /**/
+			, ACCESS_TOKEN /**/
+			, REFRESH_TOKEN /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			EXCALENDAR
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+
+	<!-- 외부캘린더 상세 조회 -->
+	<select id="selectFrontExcalendar" parameterType="frontExcalendarSelectRequest" resultType="frontExcalendarSelectResponse">
+		/* com.matjzing.mapper.FrontExcalendarMapper.selectFrontExcalendar */
+		SELECT
+			  CALENDAR_SEQ /**/
+			, USER_SEQ /**/
+			, GOOGLE_CAL_ID /**/
+			, ACCESS_TOKEN /**/
+			, REFRESH_TOKEN /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			EXCALENDAR
+		WHERE
+			CALENDAR_SEQ = #{calendarSeq}
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 외부캘린더 등록 -->
+	<insert id="insertFrontExcalendar" parameterType="frontExcalendarInsertRequest" useGeneratedKeys="true" keyProperty="excalendarSeq">
+		/* com.matjzing.mapper.FrontExcalendarMapper.insertFrontExcalendar */
+		INSERT INTO EXCALENDAR (
+			  USER_SEQ /**/
+			, GOOGLE_CAL_ID /**/
+			, ACCESS_TOKEN /**/
+			, REFRESH_TOKEN /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		) VALUES (
+			  #{userSeq}
+			, #{googleCalId}
+			, #{accessToken}
+			, #{refreshToken}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 외부캘린더 수정 -->
+    <update id="updateFrontExcalendar" parameterType="frontExcalendarUpdateRequest">
+		/* com.matjzing.mapper.FrontExcalendarMapper.updateFrontExcalendar */
+    	UPDATE EXCALENDAR SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, USER_SEQ = #{userSeq} /**/
+			, GOOGLE_CAL_ID = #{googleCalId} /**/
+			, ACCESS_TOKEN = #{accessToken} /**/
+			, REFRESH_TOKEN = #{refreshToken} /**/
+		WHERE
+			CALENDAR_SEQ = #{calendarSeq}
+	</update>
+
+	<!-- 외부캘린더 삭제 -->
+    <update id="deleteFrontExcalendar" parameterType="frontExcalendarDeleteRequest">
+		/* com.matjzing.mapper.FrontExcalendarMapper.deleteFrontExcalendar */
+    	UPDATE EXCALENDAR SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, USE_YN = FALSE
+		WHERE
+			CALENDAR_SEQ = #{calendarSeq}
+	</update>
+
+</mapper>

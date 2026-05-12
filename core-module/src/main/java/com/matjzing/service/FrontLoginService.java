@@ -6,16 +6,29 @@ import com.matjzing.dto.login.*;
 import com.matjzing.dto.login.enumeration.*;
 import com.matjzing.dto.member.*;
 import com.matjzing.exception.*;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.matjzing.mapper.FrontLoginMapper;
+import com.matjzing.mapper.FrontMemberMapper;
 import com.matjzing.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -27,6 +40,7 @@ public class FrontLoginService {
         ERR_LOGIN_001("일치하는 회원 정보가 없는 경우"),
         ERR_LOGIN_002("리프레시 토큰이 없는 경우"),
         ERR_LOGIN_003("기존 비밀번호화 일치하는 경우"),
+        ERR_LOGIN_004("Google id_token 검증 실패 또는 미설정"),
         ;
         private final String desc;
         public String getDesc() {
@@ -43,7 +57,12 @@ public class FrontLoginService {
     @Value("${jwt.refresh-header}")
     private String HEADER_REFRESH;
 
+    /** 콤마로 구분된 Google OAuth Client ID 목록 (id_token aud 검증) */
+    @Value("${google.oauth.client-ids:}")
+    private String googleOauthClientIds;
+
     private final FrontLoginMapper mapper;
+    private final FrontMemberMapper frontMemberMapper;
     
     private final Sha256Util sha256Util;
     private final Aes256Util aes256Util;
@@ -51,6 +70,97 @@ public class FrontLoginService {
     private final CookieUtil cookieUtil;
         private final PassUtil passUtil;
         private final LoginUtil loginUtil;
+
+    @Transactional
+    public FrontLoginResponse loginWithGoogle(FrontGoogleLoginRequest req) {
+        List<String> audiences = parseGoogleClientIds();
+        if (audiences.isEmpty()) {
+            throw new CustomException(LoginERRCd.ERR_LOGIN_004.toString(), "google.oauth.client-ids 설정이 비어 있습니다.");
+        }
+        GoogleIdToken idToken;
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
+                    .setAudience(audiences)
+                    .build();
+            idToken = verifier.verify(req.getIdToken());
+        } catch (GeneralSecurityException | IOException e) {
+            throw new CustomException(LoginERRCd.ERR_LOGIN_004.toString(), LoginERRCd.ERR_LOGIN_004.getDesc());
+        }
+        if (idToken == null) {
+            throw new CustomException(LoginERRCd.ERR_LOGIN_004.toString(), LoginERRCd.ERR_LOGIN_004.getDesc());
+        }
+
+        GoogleIdToken.Payload payload = idToken.getPayload();
+        String sub = payload.getSubject();
+        if (!StringUtils.hasText(sub)) {
+            throw new CustomException(LoginERRCd.ERR_LOGIN_004.toString(), LoginERRCd.ERR_LOGIN_004.getDesc());
+        }
+
+        FrontLoginSelectResponse member = mapper.selectMemberByGoogleSub(sub);
+        if (ObjectUtils.isEmpty(member)) {
+            registerGoogleMember(sub, payload);
+            member = mapper.selectMemberByGoogleSub(sub);
+        }
+        if (ObjectUtils.isEmpty(member)) {
+            throw new CustomException(LoginERRCd.ERR_LOGIN_001.toString(), LoginERRCd.ERR_LOGIN_001.getDesc());
+        }
+
+        FrontLoginRequest loginReq = new FrontLoginRequest();
+        loginReq.setMemberSeq(member.getMemberSeq());
+        return responseLogin(loginReq, member, true);
+    }
+
+    private List<String> parseGoogleClientIds() {
+        if (!StringUtils.hasText(googleOauthClientIds)) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(googleOauthClientIds.split(","))
+                .map(String::trim)
+                .filter(StringUtils::hasText)
+                .collect(Collectors.toList());
+    }
+
+    private void registerGoogleMember(String sub, GoogleIdToken.Payload payload) {
+        String email = payload.getEmail() != null ? payload.getEmail() : "";
+        String name = payload.get("name") != null ? String.valueOf(payload.get("name")) : "";
+        if (!StringUtils.hasText(name) && StringUtils.hasText(email)) {
+            name = email.contains("@") ? email.substring(0, email.indexOf('@')) : email;
+        }
+        if (!StringUtils.hasText(name)) {
+            name = "GoogleUser";
+        }
+
+        String synthetic = sha256Util.encrypt("GOOGLE_OIDC|" + sub);
+        String loginIdPlain = "google_" + sub;
+        String encId = aes256Util.encrypt(loginIdPlain);
+        String encEmail = StringUtils.hasText(email) ? aes256Util.encrypt(email) : null;
+        String randomPassword = sha256Util.encrypt(UUID.randomUUID().toString());
+
+        FrontMemberGoogleInsertRequest insert = new FrontMemberGoogleInsertRequest();
+        MapperUtil.setBaseRequest(insert);
+        insert.setRegisterSeq(0L);
+        insert.setUpdaterSeq(0L);
+        insert.setGoogleSub(sub);
+        insert.setMemberTypeCd("GOOGLE");
+        insert.setId(encId);
+        insert.setCi(synthetic);
+        insert.setDi(synthetic);
+        insert.setPassword(randomPassword);
+        insert.setEmail(encEmail);
+        insert.setName(name);
+        insert.setNickname(name);
+        insert.setGenderCd("-");
+        insert.setTelecomSectionCd("-");
+        insert.setNativeSectionCd("-");
+        insert.setMobilePhoneNo(null);
+        insert.setBirthday(null);
+
+        try {
+            frontMemberMapper.insertMemberGoogle(insert);
+        } catch (DataIntegrityViolationException e) {
+            // 동시 최초 로그인 등으로 UK_MEMBER_GOOGLE_SUB 충돌 시 재조회만 하면 됨
+        }
+    }
 
     @Transactional
     public FrontLoginResponse login(FrontLoginRequest req) {
@@ -128,7 +238,8 @@ public class FrontLoginService {
 
         // 비밀번호 만료여부 체크
         LocalDateTime now = LocalDateTime.now();
-        boolean isPasswordExpired = ChronoUnit.DAYS.between(member.getPasswordChangeDt(), now) > 90;
+        boolean isPasswordExpired = member.getPasswordChangeDt() != null
+                && ChronoUnit.DAYS.between(member.getPasswordChangeDt(), now) > 90;
 
         // 로그인 이력 저장
 //        FrontLoginHistoryInsertRequest loginHistoryInsertRequest = new FrontLoginHistoryInsertRequest();

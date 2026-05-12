@@ -43,7 +43,8 @@ public class FrontMemberService {
         // pass 복호화 및 req에 삽입
         passUtil.decPassInfo(req);
 
-        // id, ci, di 중복체크
+        // id, ci, di 중복체크 (DB ID는 AES 저장과 동일하게 비교)
+        req.setId(aes256Util.encrypt(req.getId()));
         FrontMemberSelectResponse selectMemberResponse = mapper.selectDuplicateMember(req);
 
         if (!ObjectUtils.isEmpty(selectMemberResponse)) {
@@ -79,6 +80,7 @@ public class FrontMemberService {
     }
 
     public FrontMemberCheckIdResponse checkId(FrontMemberCheckIdRequest req) {
+        req.setId(aes256Util.encrypt(req.getId()));
         FrontMemberCheckIdResponse frontMemberCheckIdResponse = new FrontMemberCheckIdResponse();
         frontMemberCheckIdResponse.setUseYn(mapper.checkId(req) > 0);
         return frontMemberCheckIdResponse;

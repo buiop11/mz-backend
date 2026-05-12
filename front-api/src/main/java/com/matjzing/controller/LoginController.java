@@ -37,6 +37,21 @@ public class LoginController {
 		return RestUtil.ok(service.login(req));
 	}
 
+	@PostMapping("/login/google")
+	@Operation(summary = "Google 로그인", description =
+		  "## Description ##\n"
+		+ "Google OIDC `id_token`을 검증한 뒤, 회원이 없으면 MEMBER에 자동 등록하고 access/refresh 토큰을 발급합니다.\n"
+		+ "refreshToken은 쿠키로 발급됩니다.\n"
+		+ "## 에러코드 ##\n"
+		+ "코드|설명\n"
+		+ "-|-\n"
+		+ "ERR_LOGIN_001 | 회원 조회 실패(등록 직후 오류 등)\n"
+		+ "ERR_LOGIN_004 | id_token 검증 실패 또는 google.oauth.client-ids 미설정\n"
+	)
+	public ResponseEntity<ResponseModel<FrontLoginResponse>> loginWithGoogle(@Valid @RequestBody FrontGoogleLoginRequest req) {
+		return RestUtil.ok(service.loginWithGoogle(req));
+	}
+
 	@PutMapping("/access-token")
 	@Operation(summary ="access 토큰 갱신", description =
 		  "## Description ##\n"

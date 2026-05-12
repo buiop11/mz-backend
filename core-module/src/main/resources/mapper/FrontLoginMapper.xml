@@ -21,6 +21,27 @@
         , DI /*DI*/
     </sql>
 
+    <select id="selectMemberByGoogleSub" resultType="frontLoginSelectResponse">
+        /* com.matjzing.mapper.FrontLoginMapper.selectMemberByGoogleSub */
+        SELECT
+            <include refid="selectLoginSelect"/>
+        FROM
+            MEMBER
+        WHERE
+            USE_YN = TRUE
+            AND GOOGLE_SUB = #{googleSub}
+
+        UNION ALL
+
+        SELECT
+            <include refid="selectLoginSelect"/>
+        FROM
+            DORMANCY_MEMBER
+        WHERE
+            USE_YN = TRUE
+            AND GOOGLE_SUB = #{googleSub}
+    </select>
+
     <sql id="selectLoginWhere">
         WHERE
         USE_YN = TRUE
@@ -152,6 +173,7 @@
               A.UPDATE_DT = NOW(3)
             , A.CI = B.CI
             , A.DI = B.DI
+            , A.GOOGLE_SUB = B.GOOGLE_SUB
             , A.ID = B.ID
             , A.GENDER_CD = B.GENDER_CD
             , A.PASSWORD = B.PASSWORD
@@ -175,7 +197,7 @@
     <insert id="insertDormancyMember" parameterType="commonMemberSelectRequest">
         /* com.matjzing.FrontLoginMapper.insertDormancyMember */
         INSERT INTO DORMANCY_MEMBER (
-              MEMBER_SEQ, MEMBER_TYPE_CD, ID, CI, DI, GENDER_CD , TELECOM_SECTION_CD
+              MEMBER_SEQ, MEMBER_TYPE_CD, ID, CI, DI, GOOGLE_SUB, GENDER_CD , TELECOM_SECTION_CD
             , NATIVE_SECTION_CD, PASSWORD, PASSWORD_CHANGE_DT, NAME, NICKNAME
             , INTRODUCTION, MOBILE_PHONE_NO, EMAIL, BIRTHDAY, JOIN_DT, RECENT_LOGIN_DT
             , RECENT_CONNECTION_DT, MEMBER_STATUS_CD, MEMBER_STATUS_CHANGE_DT
@@ -187,7 +209,7 @@
             , DORMANCY_CONVERSION_DT
         )
         SELECT
-              MEMBER_SEQ, MEMBER_TYPE_CD, ID, CI, DI, GENDER_CD, TELECOM_SECTION_CD
+              MEMBER_SEQ, MEMBER_TYPE_CD, ID, CI, DI, GOOGLE_SUB, GENDER_CD, TELECOM_SECTION_CD
              , NATIVE_SECTION_CD, PASSWORD, PASSWORD_CHANGE_DT, NAME, NICKNAME
              , INTRODUCTION, MOBILE_PHONE_NO, EMAIL, BIRTHDAY, JOIN_DT, RECENT_LOGIN_DT
              , RECENT_CONNECTION_DT, 'DORMANCY', #{memberStatusChangeDt}

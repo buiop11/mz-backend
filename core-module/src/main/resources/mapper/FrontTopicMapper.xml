@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * author: 김아진
+ * date: 2026-05-11
+ * pname: 관리자
+ * desc: 관리자 매퍼 XML 작성
+ -->
+<mapper namespace="com.matjzing.mapper.FrontTopicMapper">
+	
+	<!-- 안건 List 조회 -->
+	<select id="selectFrontTopicList" parameterType="frontTopicSelectListRequest" resultType="frontTopicSelectListResponse">
+        /* com.matjzing.mapper.FrontTopicMapper.selectFrontTopicList */
+		SELECT
+			  TOPIC_SEQ /**/
+			, GROUP_SEQ /**/
+			, CATEGORY_SEQ /**/
+			, TITLE /**/
+			, STATUS /**/
+			, GOOGLE_EVENT_ID /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			TOPIC
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 안건 Page 조회 -->
+	<select id="selectFrontTopicPage" parameterType="frontTopicSelectPageRequest" resultType="frontTopicSelectPageResponse">
+		/* com.matjzing.mapper.FrontTopicMapper.selectFrontTopicPage */
+		SELECT
+			  TOPIC_SEQ /**/
+			, GROUP_SEQ /**/
+			, CATEGORY_SEQ /**/
+			, TITLE /**/
+			, STATUS /**/
+			, GOOGLE_EVENT_ID /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			TOPIC
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+
+	<!-- 안건 상세 조회 -->
+	<select id="selectFrontTopic" parameterType="frontTopicSelectRequest" resultType="frontTopicSelectResponse">
+		/* com.matjzing.mapper.FrontTopicMapper.selectFrontTopic */
+		SELECT
+			  TOPIC_SEQ /**/
+			, GROUP_SEQ /**/
+			, CATEGORY_SEQ /**/
+			, TITLE /**/
+			, STATUS /**/
+			, GOOGLE_EVENT_ID /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			TOPIC
+		WHERE
+			TOPIC_SEQ = #{topicSeq}
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 안건 등록 -->
+	<insert id="insertFrontTopic" parameterType="frontTopicInsertRequest" useGeneratedKeys="true" keyProperty="topicSeq">
+		/* com.matjzing.mapper.FrontTopicMapper.insertFrontTopic */
+		INSERT INTO TOPIC (
+			  GROUP_SEQ /**/
+			, CATEGORY_SEQ /**/
+			, TITLE /**/
+			, STATUS /**/
+			, GOOGLE_EVENT_ID /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		) VALUES (
+			  #{groupSeq}
+			, #{categorySeq}
+			, #{title}
+			, #{status}
+			, #{googleEventId}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 안건 수정 -->
+    <update id="updateFrontTopic" parameterType="frontTopicUpdateRequest">
+		/* com.matjzing.mapper.FrontTopicMapper.updateFrontTopic */
+    	UPDATE TOPIC SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, GROUP_SEQ = #{groupSeq} /**/
+			, CATEGORY_SEQ = #{categorySeq} /**/
+			, TITLE = #{title} /**/
+			, STATUS = #{status} /**/
+			, GOOGLE_EVENT_ID = #{googleEventId} /**/
+		WHERE
+			TOPIC_SEQ = #{topicSeq}
+	</update>
+
+	<!-- 안건 삭제 -->
+    <update id="deleteFrontTopic" parameterType="frontTopicDeleteRequest">
+		/* com.matjzing.mapper.FrontTopicMapper.deleteFrontTopic */
+    	UPDATE TOPIC SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, USE_YN = FALSE
+		WHERE
+			TOPIC_SEQ = #{topicSeq}
+	</update>
+
+</mapper>

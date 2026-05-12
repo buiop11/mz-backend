@@ -15,13 +15,13 @@ public class ActionLogService {
 	@Transactional
 	public void insertMemberActionLog(ActionLogInsertRequest req) {
 		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅
-		mapper.insertMemberActionLog(req); // 등록처리
+//		mapper.insertMemberActionLog(req); // 등록처리
 	}
 
 	@Transactional
 	public void insertManagerActionLog(ActionLogInsertRequest req) {
 		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅
-		mapper.insertManagerActionLog(req); // 등록처리
+//		mapper.insertManagerActionLog(req); // 등록처리
 	}
 
 }

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * author: 김아진
+ * date: 2026-05-11
+ * pname: 관리자
+ * desc: 관리자 매퍼 XML 작성
+ -->
+<mapper namespace="com.matjzing.mapper.FrontVoteMapper">
+	
+	<!-- 투표 List 조회 -->
+	<select id="selectFrontVoteList" parameterType="frontVoteSelectListRequest" resultType="frontVoteSelectListResponse">
+        /* com.matjzing.mapper.FrontVoteMapper.selectFrontVoteList */
+		SELECT
+			  VOTE_SEQ /**/
+			, TOPIC_SEQ /**/
+			, CANDIDATE_SEQ /**/
+			, USER_SEQ /**/
+			, COMMENT /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			VOTE
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 투표 Page 조회 -->
+	<select id="selectFrontVotePage" parameterType="frontVoteSelectPageRequest" resultType="frontVoteSelectPageResponse">
+		/* com.matjzing.mapper.FrontVoteMapper.selectFrontVotePage */
+		SELECT
+			  VOTE_SEQ /**/
+			, TOPIC_SEQ /**/
+			, CANDIDATE_SEQ /**/
+			, USER_SEQ /**/
+			, COMMENT /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			VOTE
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+
+	<!-- 투표 상세 조회 -->
+	<select id="selectFrontVote" parameterType="frontVoteSelectRequest" resultType="frontVoteSelectResponse">
+		/* com.matjzing.mapper.FrontVoteMapper.selectFrontVote */
+		SELECT
+			  VOTE_SEQ /**/
+			, TOPIC_SEQ /**/
+			, CANDIDATE_SEQ /**/
+			, USER_SEQ /**/
+			, COMMENT /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			VOTE
+		WHERE
+			VOTE_SEQ = #{voteSeq}
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 투표 등록 -->
+	<insert id="insertFrontVote" parameterType="frontVoteInsertRequest" useGeneratedKeys="true" keyProperty="voteSeq">
+		/* com.matjzing.mapper.FrontVoteMapper.insertFrontVote */
+		INSERT INTO VOTE (
+			  TOPIC_SEQ /**/
+			, CANDIDATE_SEQ /**/
+			, USER_SEQ /**/
+			, COMMENT /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		) VALUES (
+			  #{topicSeq}
+			, #{candidateSeq}
+			, #{userSeq}
+			, #{comment}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 투표 수정 -->
+    <update id="updateFrontVote" parameterType="frontVoteUpdateRequest">
+		/* com.matjzing.mapper.FrontVoteMapper.updateFrontVote */
+    	UPDATE VOTE SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, TOPIC_SEQ = #{topicSeq} /**/
+			, CANDIDATE_SEQ = #{candidateSeq} /**/
+			, USER_SEQ = #{userSeq} /**/
+			, COMMENT = #{comment} /**/
+		WHERE
+			VOTE_SEQ = #{voteSeq}
+	</update>
+
+	<!-- 투표 삭제 -->
+    <update id="deleteFrontVote" parameterType="frontVoteDeleteRequest">
+		/* com.matjzing.mapper.FrontVoteMapper.deleteFrontVote */
+    	UPDATE VOTE SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, USE_YN = FALSE
+		WHERE
+			VOTE_SEQ = #{voteSeq}
+	</update>
+
+</mapper>

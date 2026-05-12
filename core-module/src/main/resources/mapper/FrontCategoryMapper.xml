@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * author: 김아진
+ * date: 2026-05-11
+ * pname: 관리자
+ * desc: 관리자 매퍼 XML 작성
+ -->
+<mapper namespace="com.matjzing.mapper.FrontCategoryMapper">
+	
+	<!-- 카테고리 List 조회 -->
+	<select id="selectFrontCategoryList" parameterType="frontCategorySelectListRequest" resultType="frontCategorySelectListResponse">
+        /* com.matjzing.mapper.FrontCategoryMapper.selectFrontCategoryList */
+		SELECT
+			  CATEGORY_SEQ /**/
+			, NAME /**/
+			, ICON_URL /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			CATEGORY
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 카테고리 Page 조회 -->
+	<select id="selectFrontCategoryPage" parameterType="frontCategorySelectPageRequest" resultType="frontCategorySelectPageResponse">
+		/* com.matjzing.mapper.FrontCategoryMapper.selectFrontCategoryPage */
+		SELECT
+			  CATEGORY_SEQ /**/
+			, NAME /**/
+			, ICON_URL /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			CATEGORY
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+
+	<!-- 카테고리 상세 조회 -->
+	<select id="selectFrontCategory" parameterType="frontCategorySelectRequest" resultType="frontCategorySelectResponse">
+		/* com.matjzing.mapper.FrontCategoryMapper.selectFrontCategory */
+		SELECT
+			  CATEGORY_SEQ /**/
+			, NAME /**/
+			, ICON_URL /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		FROM
+			CATEGORY
+		WHERE
+			CATEGORY_SEQ = #{categorySeq}
+<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
+<!--		</if>-->
+	</select>
+
+	<!-- 카테고리 등록 -->
+	<insert id="insertFrontCategory" parameterType="frontCategoryInsertRequest" useGeneratedKeys="true" keyProperty="categorySeq">
+		/* com.matjzing.mapper.FrontCategoryMapper.insertFrontCategory */
+		INSERT INTO CATEGORY (
+			  NAME /**/
+			, ICON_URL /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		) VALUES (
+			  #{name}
+			, #{iconUrl}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 카테고리 수정 -->
+    <update id="updateFrontCategory" parameterType="frontCategoryUpdateRequest">
+		/* com.matjzing.mapper.FrontCategoryMapper.updateFrontCategory */
+    	UPDATE CATEGORY SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, NAME = #{name} /**/
+			, ICON_URL = #{iconUrl} /**/
+		WHERE
+			CATEGORY_SEQ = #{categorySeq}
+	</update>
+
+	<!-- 카테고리 삭제 -->
+    <update id="deleteFrontCategory" parameterType="frontCategoryDeleteRequest">
+		/* com.matjzing.mapper.FrontCategoryMapper.deleteFrontCategory */
+    	UPDATE CATEGORY SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, USE_YN = FALSE
+		WHERE
+			CATEGORY_SEQ = #{categorySeq}
+	</update>
+
+</mapper>

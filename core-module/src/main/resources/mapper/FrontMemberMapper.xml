@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.matjzing.mapper.FrontMemberMapper">
+
+    <select id="selectDuplicateMember" parameterType="frontMemberInsertRequest" resultType="frontMemberSelectResponse">
+        /* com.matjzing.mapper.FrontMemberMapper.selectDuplicateMember */
+        SELECT ID, DI, MEMBER_STATUS_CD
+        FROM (
+            SELECT ID, DI, MEMBER_STATUS_CD, 1 AS ord
+            FROM MEMBER
+            WHERE USE_YN = TRUE
+              AND (ID = #{id} OR DI = #{di})
+            UNION ALL
+            SELECT ID, DI, MEMBER_STATUS_CD, 2 AS ord
+            FROM SECESSION_MEMBER
+            WHERE ID = #{id} OR DI = #{di}
+        ) x
+        ORDER BY ord
+        LIMIT 1
+    </select>
+
+    <insert id="insertMember" parameterType="frontMemberInsertRequest" useGeneratedKeys="true" keyProperty="memberSeq">
+        /* com.matjzing.mapper.FrontMemberMapper.insertMember */
+        INSERT INTO MEMBER (
+              MEMBER_TYPE_CD, ID, CI, DI, GENDER_CD, TELECOM_SECTION_CD, NATIVE_SECTION_CD
+            , PASSWORD, PASSWORD_CHANGE_DT, NAME, NICKNAME, INTRODUCTION, MOBILE_PHONE_NO, EMAIL, BIRTHDAY
+            , JOIN_DT, RECENT_LOGIN_DT, RECENT_CONNECTION_DT, MEMBER_STATUS_CD, MEMBER_STATUS_CHANGE_DT
+            , LOGIN_FAILURE_COUNT, AUTO_LOGIN_YN, SERVICE_TERMS_AGREE_YN, SERVICE_TERMS_AGREE_DT
+            , PERSONAL_INFO_USE_AGREE_YN, PERSONAL_INFO_USE_AGREE_DT, MARKETING_USE_AGREE_YN, MARKETING_USE_AGREE_DT
+            , USE_YN, REGISTER_SEQ, REGISTER_IP, REGISTRATION_DT, UPDATER_SEQ, UPDATER_IP, UPDATE_DT
+        ) VALUES (
+              'EMAIL', #{id}, #{ci}, #{di}, #{genderCd}, #{telecomSectionCd}, #{nativeSectionCd}
+            , #{password}, NOW(3), #{name}, #{nickname}, NULL, #{mobilePhoneNo}, #{email}, #{birthday}
+            , NOW(3), NOW(3), NOW(3), 'NORMAL', NOW(3)
+            , 0, FALSE, TRUE, NOW(3), TRUE, NOW(3), FALSE, NULL
+            , TRUE, #{registerSeq}, #{registerIp}, COALESCE(#{registrationDt}, NOW(3)), #{updaterSeq}, #{updaterIp}, COALESCE(#{updateDt}, NOW(3))
+        )
+    </insert>
+
+    <insert id="insertMemberGoogle" parameterType="frontMemberGoogleInsertRequest" useGeneratedKeys="true" keyProperty="memberSeq">
+        /* com.matjzing.mapper.FrontMemberMapper.insertMemberGoogle */
+        INSERT INTO MEMBER (
+              MEMBER_TYPE_CD, ID, CI, DI, GOOGLE_SUB, GENDER_CD, TELECOM_SECTION_CD, NATIVE_SECTION_CD
+            , PASSWORD, PASSWORD_CHANGE_DT, NAME, NICKNAME, INTRODUCTION, MOBILE_PHONE_NO, EMAIL, BIRTHDAY
+            , JOIN_DT, RECENT_LOGIN_DT, RECENT_CONNECTION_DT, MEMBER_STATUS_CD, MEMBER_STATUS_CHANGE_DT
+            , LOGIN_FAILURE_COUNT, AUTO_LOGIN_YN, SERVICE_TERMS_AGREE_YN, SERVICE_TERMS_AGREE_DT
+            , PERSONAL_INFO_USE_AGREE_YN, PERSONAL_INFO_USE_AGREE_DT, MARKETING_USE_AGREE_YN, MARKETING_USE_AGREE_DT
+            , USE_YN, REGISTER_SEQ, REGISTER_IP, REGISTRATION_DT, UPDATER_SEQ, UPDATER_IP, UPDATE_DT
+        ) VALUES (
+              #{memberTypeCd}, #{id}, #{ci}, #{di}, #{googleSub}, #{genderCd}, #{telecomSectionCd}, #{nativeSectionCd}
+            , #{password}, NOW(3), #{name}, #{nickname}, NULL, #{mobilePhoneNo}, #{email}, #{birthday}
+            , NOW(3), NOW(3), NOW(3), 'NORMAL', NOW(3)
+            , 0, FALSE, TRUE, NOW(3), TRUE, NOW(3), FALSE, NULL
+            , TRUE, #{registerSeq}, #{registerIp}, COALESCE(#{registrationDt}, NOW(3)), #{updaterSeq}, #{updaterIp}, COALESCE(#{updateDt}, NOW(3))
+        )
+    </insert>
+
+    <select id="checkId" parameterType="frontMemberCheckIdRequest" resultType="int">
+        /* com.matjzing.mapper.FrontMemberMapper.checkId */
+        SELECT COUNT(*)
+        FROM MEMBER
+        WHERE USE_YN = TRUE
+          AND ID = #{id}
+    </select>
+
+    <insert id="insertSecessionMember" parameterType="commonMemberSelectRequest">
+        /* com.matjzing.mapper.FrontMemberMapper.insertSecessionMember */
+        INSERT INTO SECESSION_MEMBER (
+              MEMBER_SEQ, MEMBER_TYPE_CD, ID, CI, DI, GOOGLE_SUB, GENDER_CD, TELECOM_SECTION_CD
+            , NATIVE_SECTION_CD, PASSWORD, PASSWORD_CHANGE_DT, NAME, NICKNAME
+            , INTRODUCTION, MOBILE_PHONE_NO, EMAIL, BIRTHDAY, JOIN_DT, RECENT_LOGIN_DT
+            , RECENT_CONNECTION_DT, MEMBER_STATUS_CD, MEMBER_STATUS_CHANGE_DT
+            , AUTO_LOGIN_YN, APP_VERSION, OS_VERSION, OS_SECTION_CD, DEVICE_MODEL_NAME
+            , DEVICE_MARKETING_NO, APP_PUSH_VALUE, SERVICE_TERMS_AGREE_YN
+            , SERVICE_TERMS_AGREE_DT, PERSONAL_INFO_USE_AGREE_YN, PERSONAL_INFO_USE_AGREE_DT
+            , MARKETING_USE_AGREE_YN, MARKETING_USE_AGREE_DT, USE_YN, REGISTER_SEQ
+            , REGISTER_IP, REGISTRATION_DT, UPDATER_SEQ, UPDATER_IP, UPDATE_DT
+            , SECESSION_DT
+        )
+        SELECT
+              MEMBER_SEQ, MEMBER_TYPE_CD, ID, CI, DI, GOOGLE_SUB, GENDER_CD, TELECOM_SECTION_CD
+            , NATIVE_SECTION_CD, PASSWORD, PASSWORD_CHANGE_DT, NAME, NICKNAME
+            , INTRODUCTION, MOBILE_PHONE_NO, EMAIL, BIRTHDAY, JOIN_DT, RECENT_LOGIN_DT
+            , RECENT_CONNECTION_DT, 'SECESSION', NOW(3)
+            , AUTO_LOGIN_YN, APP_VERSION, OS_VERSION, OS_SECTION_CD, DEVICE_MODEL_NAME
+            , DEVICE_MARKETING_NO, APP_PUSH_VALUE, SERVICE_TERMS_AGREE_YN
+            , SERVICE_TERMS_AGREE_DT, PERSONAL_INFO_USE_AGREE_YN, PERSONAL_INFO_USE_AGREE_DT
+            , MARKETING_USE_AGREE_YN, MARKETING_USE_AGREE_DT, USE_YN, REGISTER_SEQ
+            , REGISTER_IP, REGISTRATION_DT, UPDATER_SEQ, UPDATER_IP, UPDATE_DT
+            , NOW(3)
+        FROM MEMBER
+        WHERE MEMBER_SEQ = #{memberSeq}
+    </insert>
+
+    <update id="deleteMember" parameterType="commonMemberSelectRequest">
+        /* com.matjzing.mapper.FrontMemberMapper.deleteMember */
+        UPDATE MEMBER
+        SET UPDATER_SEQ = #{updaterSeq}
+          , UPDATE_DT = NOW(3)
+          , UPDATER_IP = #{updaterIp}
+          , PASSWORD = #{password}
+          , USE_YN = FALSE
+        WHERE MEMBER_SEQ = #{memberSeq}
+    </update>
+
+    <select id="selectMember" parameterType="commonMemberSelectRequest" resultType="frontMemberSelectResponse">
+        /* com.matjzing.mapper.FrontMemberMapper.selectMember */
+        SELECT ID, PASSWORD, DI, MEMBER_STATUS_CD
+        FROM MEMBER
+        WHERE USE_YN = TRUE
+          AND MEMBER_SEQ = #{memberSeq}
+    </select>
+
+    <update id="updatePassword" parameterType="frontMemberPasswordUpdateRequest">
+        /* com.matjzing.mapper.FrontMemberMapper.updatePassword */
+        UPDATE MEMBER
+        SET UPDATER_SEQ = #{updaterSeq}
+          , UPDATE_DT = NOW(3)
+          , UPDATER_IP = #{updaterIp}
+          , PASSWORD = #{newPassword}
+          , PASSWORD_CHANGE_DT = NOW(3)
+          , LOGIN_FAILURE_COUNT = 0
+        WHERE MEMBER_SEQ = #{memberSeq}
+    </update>
+
+</mapper>

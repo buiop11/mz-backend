@@ -1,0 +1,17 @@
+-- Google OIDC subject 저장용 (front-api Google 로그인)
+-- 적용 전 백업 권장.
+
+ALTER TABLE MEMBER
+    ADD COLUMN GOOGLE_SUB VARCHAR(255) NULL COMMENT 'Google OIDC sub' AFTER DI;
+
+CREATE UNIQUE INDEX UK_MEMBER_GOOGLE_SUB ON MEMBER (GOOGLE_SUB);
+
+ALTER TABLE DORMANCY_MEMBER
+    ADD COLUMN GOOGLE_SUB VARCHAR(255) NULL COMMENT 'Google OIDC sub' AFTER DI;
+
+-- 탈퇴 스냅샷 테이블에도 동일 컬럼이 있으면 추가 (실제 컬럼 위치는 DB에 맞게 조정)
+ALTER TABLE SECESSION_MEMBER
+    ADD COLUMN GOOGLE_SUB VARCHAR(255) NULL COMMENT 'Google OIDC sub';
+
+-- insertSecessionMember 가 SECESSION_DT 컬럼을 사용합니다. 없으면 추가하거나 FrontMemberMapper.xml 을 테이블 정의에 맞게 수정하세요.
+-- ALTER TABLE SECESSION_MEMBER ADD COLUMN SECESSION_DT DATETIME(3) NULL COMMENT '탈퇴 일시';
