@@ -27,6 +27,12 @@ public class FrontTopicSelectListResponse {
 	private Long categorySeq;
 
 	@Schema(description = "", example = "")
+	private String categoryName;
+
+	@Schema(description = "", example = "")
+	private String emoji;
+
+	@Schema(description = "", example = "")
 	private String title;
 
 	@Schema(description = "", example = "")

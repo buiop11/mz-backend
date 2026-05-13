@@ -41,10 +41,6 @@ public class FrontTopicController {
 	@Operation(summary ="안건 List 조회", description =
 		  "## Description ##\n"
 		+ "안건 List 조회 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_TOPIC_001 | 안건 List 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<List<FrontTopicSelectListResponse>>> list(FrontTopicSelectListRequest req) {
 		return RestUtil.ok(service.list(req));
@@ -54,10 +50,6 @@ public class FrontTopicController {
 	@Operation(summary ="안건 Page 조회", description =
 		  "## Description ##\n"
 		+ "안건 Page 조회 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_TOPIC_002 | 안건 Page 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EPageInfo<FrontTopicSelectPageResponse>>> page(FrontTopicSelectPageRequest req) {
 		return RestUtil.ok(service.page(req));
@@ -67,10 +59,6 @@ public class FrontTopicController {
 	@Operation(summary ="안건 상세 조회", description =
 		  "## Description ##\n"
 		+ "안건 상세 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_TOPIC_003 | 안건 상세 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<FrontTopicSelectResponse>> detail(@PathVariable("topicSeq") Long topicSeq, @Parameter(hidden = true) FrontTopicSelectRequest req) {
 		return RestUtil.ok(service.detail(req));
@@ -80,10 +68,6 @@ public class FrontTopicController {
 	@Operation(summary ="안건 등록", description =
 		  "## Description ##\n"
 		+ "안건 등록 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_TOPIC_004 | 안건 등록 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> insert(@Valid @RequestBody FrontTopicInsertRequest req) {
 		service.insert(req);
@@ -94,10 +78,6 @@ public class FrontTopicController {
 	@Operation(summary ="안건 수정", description =
 		  "## Description ##\n"
 		+ "안건 수정 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_TOPIC_005 | 안건 수정 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> update(@Valid @RequestBody FrontTopicUpdateRequest req) {
 		service.update(req);
@@ -108,10 +88,6 @@ public class FrontTopicController {
 	@Operation(summary ="안건 삭제", description =
 		  "## Description ##\n"
 		+ "안건 삭제 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_TOPIC_006 | 안건 삭제 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("topicSeq") Long topicSeq, @Parameter(hidden = true) FrontTopicDeleteRequest req) {
 		service.delete(req);

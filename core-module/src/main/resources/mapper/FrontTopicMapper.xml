@@ -17,6 +17,8 @@
 			  TOPIC_SEQ /**/
 			, GROUP_SEQ /**/
 			, CATEGORY_SEQ /**/
+			, (SELECT NAME FROM CATEGORY WHERE CATEGORY_SEQ = t.CATEGORY_SEQ) AS CATEGORY_NAME
+			, EMOJI
 			, TITLE /**/
 			, STATUS /**/
 			, GOOGLE_EVENT_ID /**/
@@ -28,9 +30,12 @@
 			, UPDATER_IP /**/
 			, UPDATE_DT /**/
 		FROM
-			TOPIC
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
+			TOPIC t
+		WHERE
+			USE_YN = true
+		<if test="categorySeq != null">
+			AND CATEGORY_SEQ = #{categorySeq}
+		</if>
 	</select>
 
 	<!-- 안건 Page 조회 -->
@@ -40,6 +45,8 @@
 			  TOPIC_SEQ /**/
 			, GROUP_SEQ /**/
 			, CATEGORY_SEQ /**/
+			, (SELECT NAME FROM CATEGORY WHERE CATEGORY_SEQ = t.CATEGORY_SEQ) AS CATEGORY_NAME
+			, EMOJI
 			, TITLE /**/
 			, STATUS /**/
 			, GOOGLE_EVENT_ID /**/
@@ -51,9 +58,12 @@
 			, UPDATER_IP /**/
 			, UPDATE_DT /**/
 		FROM
-			TOPIC
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
+			TOPIC t
+		WHERE
+			USE_YN = true
+		<if test="categorySeq != null">
+			AND CATEGORY_SEQ = #{categorySeq}
+		</if>
 	</select>
 
 
@@ -64,6 +74,8 @@
 			  TOPIC_SEQ /**/
 			, GROUP_SEQ /**/
 			, CATEGORY_SEQ /**/
+			, (SELECT NAME FROM CATEGORY WHERE CATEGORY_SEQ = t.CATEGORY_SEQ) AS CATEGORY_NAME
+			, EMOJI
 			, TITLE /**/
 			, STATUS /**/
 			, GOOGLE_EVENT_ID /**/
@@ -75,11 +87,9 @@
 			, UPDATER_IP /**/
 			, UPDATE_DT /**/
 		FROM
-			TOPIC
+			TOPIC t
 		WHERE
 			TOPIC_SEQ = #{topicSeq}
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
 	</select>
 
 	<!-- 안건 등록 -->
@@ -88,6 +98,7 @@
 		INSERT INTO TOPIC (
 			  GROUP_SEQ /**/
 			, CATEGORY_SEQ /**/
+			, EMOJI
 			, TITLE /**/
 			, STATUS /**/
 			, GOOGLE_EVENT_ID /**/
@@ -101,6 +112,7 @@
 		) VALUES (
 			  #{groupSeq}
 			, #{categorySeq}
+			, #{emoji}
 			, #{title}
 			, #{status}
 			, #{googleEventId}
@@ -123,6 +135,7 @@
 			, UPDATE_DT = NOW(3) /*수정_일시*/
 			, GROUP_SEQ = #{groupSeq} /**/
 			, CATEGORY_SEQ = #{categorySeq} /**/
+			, EMOJI = #{emoji} /**/
 			, TITLE = #{title} /**/
 			, STATUS = #{status} /**/
 			, GOOGLE_EVENT_ID = #{googleEventId} /**/

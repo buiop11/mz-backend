@@ -16,7 +16,8 @@ import org.apache.ibatis.type.Alias;
 @Schema(description = "안건 Page 조회 요청 모델")
 @Alias("frontTopicSelectPageRequest")
 public class FrontTopicSelectPageRequest extends PageRequest {
-	/*
-		@NotNull(message = "필수값입니다.")
-	 */
+
+    @Schema(description = "", example = "")
+    private Long categorySeq;
+
 }
