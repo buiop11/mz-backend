@@ -115,6 +115,12 @@ public class FrontCandidateService {
 		return new EPageInfo<>(mapper.selectFrontCandidatePage(req));
 	}
 
+	public FrontCandidateCountResponse count(FrontCandidateCountRequest req) {
+		FrontCandidateCountResponse res = new FrontCandidateCountResponse();
+		res.setCount(mapper.selectFrontCandidateCount(req));
+		return res;
+	}
+
 	public FrontCandidateSelectResponse detail(FrontCandidateSelectRequest req) {
 
 		FrontCandidateSelectResponse response = mapper.selectFrontCandidate(req);

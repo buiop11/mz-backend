@@ -17,6 +17,7 @@
 			  CANDIDATE_SEQ /**/
 			, TOPIC_SEQ /**/
 			, NAME /**/
+			, INFO /**/
 			, PRICE /**/
 			, IMAGE_URL /**/
 			, LINK_URL /**/
@@ -30,8 +31,10 @@
 			, UPDATE_DT /**/
 		FROM
 			CANDIDATE
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
+		WHERE
+			USE_YN = true
+		AND
+			TOPIC_SEQ = #{topicSeq}
 	</select>
 
 	<!-- 후보 Page 조회 -->
@@ -41,6 +44,7 @@
 			  CANDIDATE_SEQ /**/
 			, TOPIC_SEQ /**/
 			, NAME /**/
+			, INFO /**/
 			, PRICE /**/
 			, IMAGE_URL /**/
 			, LINK_URL /**/
@@ -54,10 +58,25 @@
 			, UPDATE_DT /**/
 		FROM
 			CANDIDATE
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
+		WHERE
+			USE_YN = true
+		AND
+			TOPIC_SEQ = #{topicSeq}
 	</select>
 
+
+	<!-- 후보 개수 조회 (topicSeq 별) -->
+	<select id="selectFrontCandidateCount" parameterType="frontCandidateCountRequest" resultType="long">
+		/* com.matjzing.mapper.FrontCandidateMapper.selectFrontCandidateCount */
+		SELECT
+			COUNT(*)
+		FROM
+			CANDIDATE
+		WHERE
+			USE_YN = true
+		AND
+			TOPIC_SEQ = #{topicSeq}
+	</select>
 
 	<!-- 후보 상세 조회 -->
 	<select id="selectFrontCandidate" parameterType="frontCandidateSelectRequest" resultType="frontCandidateSelectResponse">
@@ -66,6 +85,7 @@
 			  CANDIDATE_SEQ /**/
 			, TOPIC_SEQ /**/
 			, NAME /**/
+			, INFO /**/
 			, PRICE /**/
 			, IMAGE_URL /**/
 			, LINK_URL /**/
@@ -81,8 +101,6 @@
 			CANDIDATE
 		WHERE
 			CANDIDATE_SEQ = #{candidateSeq}
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
 	</select>
 
 	<!-- 후보 등록 -->
@@ -91,6 +109,7 @@
 		INSERT INTO CANDIDATE (
 			  TOPIC_SEQ /**/
 			, NAME /**/
+			, INFO /**/
 			, PRICE /**/
 			, IMAGE_URL /**/
 			, LINK_URL /**/
@@ -128,6 +147,7 @@
 			, UPDATE_DT = NOW(3) /*수정_일시*/
 			, TOPIC_SEQ = #{topicSeq} /**/
 			, NAME = #{name} /**/
+			, INFO = #{info} /**/
 			, PRICE = #{price} /**/
 			, IMAGE_URL = #{imageUrl} /**/
 			, LINK_URL = #{linkUrl} /**/

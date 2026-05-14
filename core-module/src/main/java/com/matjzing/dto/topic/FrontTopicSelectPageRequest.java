@@ -17,7 +17,7 @@ import org.apache.ibatis.type.Alias;
 @Alias("frontTopicSelectPageRequest")
 public class FrontTopicSelectPageRequest extends PageRequest {
 
-    @Schema(description = "", example = "")
+    @Schema(description = "카테고리 시퀀스", example = "1")
     private Long categorySeq;
 
 }

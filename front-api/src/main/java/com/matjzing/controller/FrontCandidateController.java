@@ -41,10 +41,6 @@ public class FrontCandidateController {
 	@Operation(summary ="후보 List 조회", description =
 		  "## Description ##\n"
 		+ "후보 List 조회 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CANDIDATE_001 | 후보 List 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<List<FrontCandidateSelectListResponse>>> list(FrontCandidateSelectListRequest req) {
 		return RestUtil.ok(service.list(req));
@@ -54,23 +50,24 @@ public class FrontCandidateController {
 	@Operation(summary ="후보 Page 조회", description =
 		  "## Description ##\n"
 		+ "후보 Page 조회 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CANDIDATE_002 | 후보 Page 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EPageInfo<FrontCandidateSelectPageResponse>>> page(FrontCandidateSelectPageRequest req) {
 		return RestUtil.ok(service.page(req));
+	}
+
+	@GetMapping("/count")
+	@Operation(summary ="안건별 후보 개수 조회", description =
+		  "## Description ##\n"
+		+ "topicSeq 별 후보 개수 조회 API 입니다\n"
+	)
+	public ResponseEntity<ResponseModel<FrontCandidateCountResponse>> count(@Valid FrontCandidateCountRequest req) {
+		return RestUtil.ok(service.count(req));
 	}
 
 	@GetMapping("/{candidateSeq}")
 	@Operation(summary ="후보 상세 조회", description =
 		  "## Description ##\n"
 		+ "후보 상세 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CANDIDATE_003 | 후보 상세 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<FrontCandidateSelectResponse>> detail(@PathVariable("candidateSeq") Long candidateSeq, @Parameter(hidden = true) FrontCandidateSelectRequest req) {
 		return RestUtil.ok(service.detail(req));
@@ -80,10 +77,6 @@ public class FrontCandidateController {
 	@Operation(summary ="후보 등록", description =
 		  "## Description ##\n"
 		+ "후보 등록 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CANDIDATE_004 | 후보 등록 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> insert(@Valid @RequestBody FrontCandidateInsertRequest req) {
 		service.insert(req);
@@ -94,10 +87,6 @@ public class FrontCandidateController {
 	@Operation(summary ="후보 수정", description =
 		  "## Description ##\n"
 		+ "후보 수정 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CANDIDATE_005 | 후보 수정 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> update(@Valid @RequestBody FrontCandidateUpdateRequest req) {
 		service.update(req);
@@ -108,10 +97,6 @@ public class FrontCandidateController {
 	@Operation(summary ="후보 삭제", description =
 		  "## Description ##\n"
 		+ "후보 삭제 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CANDIDATE_006 | 후보 삭제 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("candidateSeq") Long candidateSeq, @Parameter(hidden = true) FrontCandidateDeleteRequest req) {
 		service.delete(req);

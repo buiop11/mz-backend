@@ -2,6 +2,7 @@ package com.matjzing.dto.candidate;
 
 import com.matjzing.dto.common.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
@@ -16,7 +17,8 @@ import org.apache.ibatis.type.Alias;
 @Schema(description = "후보 Page 조회 요청 모델")
 @Alias("frontCandidateSelectPageRequest")
 public class FrontCandidateSelectPageRequest extends PageRequest {
-	/*
-		@NotNull(message = "필수값입니다.")
-	 */
+
+    @Schema(description = "안건 시퀀스", example = "1")
+    @NotNull(message = "안건 시퀀스는 필수입니다.")
+    private Long topicSeq;
 }

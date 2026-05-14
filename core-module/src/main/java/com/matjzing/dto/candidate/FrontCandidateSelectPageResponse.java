@@ -27,6 +27,9 @@ public class FrontCandidateSelectPageResponse {
 	private String name;
 
 	@Schema(description = "", example = "")
+	private String info;
+
+	@Schema(description = "", example = "")
 	private Integer price;
 
 	@Schema(description = "", example = "")

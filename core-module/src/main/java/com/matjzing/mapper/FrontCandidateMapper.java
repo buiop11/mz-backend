@@ -18,6 +18,7 @@ public interface FrontCandidateMapper {
 	List<FrontCandidateSelectListResponse> selectFrontCandidateList(FrontCandidateSelectListRequest req);
 	Page<FrontCandidateSelectPageResponse> selectFrontCandidatePage(FrontCandidateSelectPageRequest req);
 	FrontCandidateSelectResponse selectFrontCandidate(FrontCandidateSelectRequest req);
+	Long selectFrontCandidateCount(FrontCandidateCountRequest req);
 	Long insertFrontCandidate(FrontCandidateInsertRequest req);
 	Long updateFrontCandidate(FrontCandidateUpdateRequest req);
 	Long deleteFrontCandidate(FrontCandidateDeleteRequest req);
