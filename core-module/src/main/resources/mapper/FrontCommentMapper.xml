@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * author: 김아진
+ * date: 2026-05-14
+ * pname: 관리자
+ * desc: 관리자 매퍼 XML 작성
+ -->
+<mapper namespace="com.matjzing.mapper.FrontCommentMapper">
+	
+	<!-- 댓글 List 조회 -->
+	<select id="selectFrontCommentList" parameterType="frontCommentSelectListRequest" resultType="frontCommentSelectListResponse">
+        /* com.matjzing.mapper.FrontCommentMapper.selectFrontCommentList */
+		SELECT
+			  COMMENT_SEQ /*댓글 일련번호*/
+			, CANDIDATE_SEQ /*후보자(대상) 일련번호*/
+			, CONTENT /*댓글 내용*/
+			, USE_YN /*사용 여부*/
+			, REGISTER_SEQ /*등록자 일련번호*/
+			, REGISTER_IP /*등록자 IP*/
+			, REGISTRATION_DT /*등록 일시*/
+			, UPDATER_SEQ /*수정자 일련번호*/
+			, UPDATER_IP /*수정자 IP*/
+			, UPDATE_DT /*수정 일시*/
+		FROM
+			COMMENT
+		WHERE
+			USE_YN = true
+		AND
+			CANDIDATE_SEQ = #{candidateSeq}
+	</select>
+
+	<!-- 댓글 Page 조회 -->
+	<select id="selectFrontCommentPage" parameterType="frontCommentSelectPageRequest" resultType="frontCommentSelectPageResponse">
+		/* com.matjzing.mapper.FrontCommentMapper.selectFrontCommentPage */
+		SELECT
+			  COMMENT_SEQ /*댓글 일련번호*/
+			, CANDIDATE_SEQ /*후보자(대상) 일련번호*/
+			, CONTENT /*댓글 내용*/
+			, USE_YN /*사용 여부*/
+			, REGISTER_SEQ /*등록자 일련번호*/
+			, REGISTER_IP /*등록자 IP*/
+			, REGISTRATION_DT /*등록 일시*/
+			, UPDATER_SEQ /*수정자 일련번호*/
+			, UPDATER_IP /*수정자 IP*/
+			, UPDATE_DT /*수정 일시*/
+		FROM
+			COMMENT
+		WHERE
+			USE_YN = true
+		AND
+			CANDIDATE_SEQ = #{candidateSeq}
+	</select>
+
+	<!-- 댓글 등록 -->
+	<insert id="insertFrontComment" parameterType="frontCommentInsertRequest" useGeneratedKeys="true" keyProperty="commentSeq">
+		/* com.matjzing.mapper.FrontCommentMapper.insertFrontComment */
+		INSERT INTO COMMENT (
+			  CANDIDATE_SEQ /*후보자(대상) 일련번호*/
+			, CONTENT /*댓글 내용*/
+			, USE_YN /*사용 여부*/
+			, REGISTER_SEQ /*등록자 일련번호*/
+			, REGISTER_IP /*등록자 IP*/
+			, REGISTRATION_DT /*등록 일시*/
+			, UPDATER_SEQ /*수정자 일련번호*/
+			, UPDATER_IP /*수정자 IP*/
+			, UPDATE_DT /*수정 일시*/
+		) VALUES (
+			  #{candidateSeq}
+			, #{content}
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 댓글 수정 -->
+    <update id="updateFrontComment" parameterType="frontCommentUpdateRequest">
+		/* com.matjzing.mapper.FrontCommentMapper.updateFrontComment */
+    	UPDATE COMMENT SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, CANDIDATE_SEQ = #{candidateSeq} /*후보자(대상) 일련번호*/
+			, CONTENT = #{content} /*댓글 내용*/
+		WHERE
+			COMMENT_SEQ = #{commentSeq}
+	</update>
+
+	<!-- 댓글 삭제 -->
+    <update id="deleteFrontComment" parameterType="frontCommentDeleteRequest">
+		/* com.matjzing.mapper.FrontCommentMapper.deleteFrontComment */
+    	UPDATE COMMENT SET
+			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
+			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
+			, UPDATE_DT = NOW(3) /*수정_일시*/
+			, USE_YN = FALSE
+		WHERE
+			COMMENT_SEQ = #{commentSeq}
+	</update>
+
+</mapper>

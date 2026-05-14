@@ -12,4 +12,5 @@ public class TagsConfig {
 	public static final String TAG_CANDIDATE_01 = "05_후보";
 	public static final String TAG_VOTE_01 = "06_투표";
 	public static final String TAG_EXCALENDAR_01 = "07_외부캘린더";
+	public static final String TAG_COMMENT_01 = "08_댓글";
 }

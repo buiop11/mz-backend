@@ -46,8 +46,11 @@ public class SecurityConfig {
 			,"/api/excalendar"
 			,"/api/excalendar/**"
 			,"/api/category"
+			,"/api/category/**"
+			,"/api/candidate"
 			,"/api/candidate/**"
-			,"/api/candidate/**"
+			,"/api/comment"
+			,"/api/comment/**"
 	};
 
 	@Bean
