@@ -16,6 +16,12 @@ spring:
           max-idle: 5
           min-idle: 5
 
+# Google Sign-In: OAuth Client ID를 환경변수 또는 아래에 직접 설정
+# Windows 예: set GOOGLE_OAUTH_CLIENT_IDS=123456789-xxxx.apps.googleusercontent.com
+google:
+  oauth:
+    client-ids: 783752128988-10di8iv7pi2evltkb8uor5rrtgl6jodj.apps.googleusercontent.com
+
 logging:
   config: classpath:logback-local.xml
 

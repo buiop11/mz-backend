@@ -267,10 +267,11 @@ public class FrontLoginService {
 
         return FrontLoginResponse.builder()
                 .passwordExpiredYn(isPasswordExpired)
+                .memberSeq(member.getMemberSeq())
                 .accessToken(token.getAccessToken())
                 .accessTokenExpiredDt(token.getAccessTokenExpiredDt())
                 .refreshToken(token.getRefreshToken())
-                .accessTokenExpiredDt(token.getRefreshTokenExpiredDt())
+                .refreshTokenExpiredDt(token.getRefreshTokenExpiredDt())
                 .build();
     }
 

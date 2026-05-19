@@ -19,6 +19,9 @@ public class FrontLoginResponse {
 	@Schema(description = "비밀번호 만료 여부 true이면 갱신 팝업 노출", example = "false")
 	private boolean passwordExpiredYn;
 
+	@Schema(description = "회원 일련번호 (MEMBER.MEMBER_SEQ). TOPIC/CANDIDATE/COMMENT의 REGISTER_SEQ에 저장됨", example = "1")
+	private Long memberSeq;
+
 	@Schema(description = "access 토큰", example = "abc...")
 	private String accessToken;
 

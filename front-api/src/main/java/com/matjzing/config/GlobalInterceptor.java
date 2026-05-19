@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import com.matjzing.dto.common.JwtAuthenticationVo;
 import com.matjzing.dto.common.enumeration.JwtType;
+import com.matjzing.security.JwtService;
 import com.matjzing.service.FrontServiceCheckService;
 import com.matjzing.util.JwtUtil;
 
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class GlobalInterceptor implements HandlerInterceptor {
 
 	private final JwtUtil jwtUtil;
+	private final JwtService jwtService;
 	private final FrontServiceCheckService serviceCheckService;
 
 	@Override
@@ -27,8 +29,8 @@ public class GlobalInterceptor implements HandlerInterceptor {
 		}
 
 		if (!jwtUtil.isCheckToken(request.getRequestURI(), SecurityConfig.URL_WHITE_LIST)) {
-			//토큰 사용자 처리
-			String token = request.getHeader("Authorization");
+			//토큰 사용자 처리 (Authorization: Bearer {token} 접두사 제거)
+			String token = jwtService.resolveToken(request);
 			if (StringUtils.hasText(token)) {
 				JwtAuthenticationVo jwtAuthenticationVo = jwtUtil.getTokenVo(token);
 				if (JwtType.access.equals(jwtAuthenticationVo.getJwtType())) {
