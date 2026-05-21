@@ -1,5 +1,6 @@
 package com.matjzing.dto.topic;
 
+import com.matjzing.dto.common.BaseRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
@@ -14,7 +15,7 @@ import org.apache.ibatis.type.Alias;
 @Data
 @Schema(description = "안건 상세 조회 요청 모델")
 @Alias("frontTopicSelectRequest")
-public class FrontTopicSelectRequest {
+public class FrontTopicSelectRequest extends BaseRequest {
 
 	@Schema(description = "", example = "")
 	private Long topicSeq;

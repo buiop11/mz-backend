@@ -18,15 +18,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * public static final String TAG_GROUPS_01 = "02.그룹"; // 번호는 채번 룰에따라
- * new Tag(TAG_GROUPS_01, "그룹 API 입니다.")
- */
-
-/**
- * @author: 김아진
- * @date: 2026-05-11
- * @pname: 관리자
- * @desc: 관리자 컨트롤러 작성
+ * 토픽 참여 회원 API (TOPIC_MEMBER — 기존 그룹/TOPIC_GROUPS 대체)
  */
 @Slf4j
 @RestController
@@ -34,56 +26,45 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = TagsConfig.TAG_GROUPS_01)
 @RequestMapping("/api/groups")
 public class FrontGroupsController {
-	
+
 	private final FrontGroupsService service;
-	
+
 	@GetMapping("/list")
-	@Operation(summary ="그룹 List 조회", description =
+	@Operation(summary = "토픽 참여 회원 List 조회", description =
 		  "## Description ##\n"
-		+ "그룹 List 조회 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_GROUPS_001 | 그룹 List 조회 실패\n"
+		+ "TOPIC_MEMBER 목록 조회 API 입니다.\n"
+		+ "`topicSeq`로 특정 안건의 참여자만 필터할 수 있습니다.\n"
 	)
 	public ResponseEntity<ResponseModel<List<FrontGroupsSelectListResponse>>> list(FrontGroupsSelectListRequest req) {
 		return RestUtil.ok(service.list(req));
 	}
 
 	@GetMapping
-	@Operation(summary ="그룹 Page 조회", description =
+	@Operation(summary = "토픽 참여 회원 Page 조회", description =
 		  "## Description ##\n"
-		+ "그룹 Page 조회 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_GROUPS_002 | 그룹 Page 조회 실패\n"
+		+ "TOPIC_MEMBER 페이지 조회 API 입니다.\n"
 	)
 	public ResponseEntity<ResponseModel<EPageInfo<FrontGroupsSelectPageResponse>>> page(FrontGroupsSelectPageRequest req) {
 		return RestUtil.ok(service.page(req));
 	}
 
-	@GetMapping("/{groupsSeq}")
-	@Operation(summary ="그룹 상세 조회", description =
+	@GetMapping("/{topicMemberSeq}")
+	@Operation(summary = "토픽 참여 회원 상세 조회", description =
 		  "## Description ##\n"
-		+ "그룹 상세 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_GROUPS_003 | 그룹 상세 조회 실패\n"
+		+ "TOPIC_MEMBER 상세 API 입니다.\n"
 	)
-	public ResponseEntity<ResponseModel<FrontGroupsSelectResponse>> detail(@PathVariable("groupsSeq") Long groupsSeq, @Parameter(hidden = true) FrontGroupsSelectRequest req) {
+	public ResponseEntity<ResponseModel<FrontGroupsSelectResponse>> detail(
+			@PathVariable("topicMemberSeq") Long topicMemberSeq,
+			@Parameter(hidden = true) FrontGroupsSelectRequest req) {
+		req.setTopicMemberSeq(topicMemberSeq);
 		return RestUtil.ok(service.detail(req));
 	}
 
 	@PostMapping
-	@Operation(summary ="그룹 등록", description =
+	@Operation(summary = "토픽 참여 회원 등록", description =
 		  "## Description ##\n"
-		+ "그룹 등록 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_GROUPS_004 | 그룹 등록 실패\n"
+		+ "TOPIC_MEMBER 등록 API 입니다 (기본 역할 PARTICIPANT).\n"
+		+ "`memberSeq`는 JWT/요청으로 채웁니다.\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> insert(@Valid @RequestBody FrontGroupsInsertRequest req) {
 		service.insert(req);
@@ -91,29 +72,24 @@ public class FrontGroupsController {
 	}
 
 	@PutMapping
-	@Operation(summary ="그룹 수정", description =
+	@Operation(summary = "토픽 참여 회원 수정", description =
 		  "## Description ##\n"
-		+ "그룹 수정 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_GROUPS_005 | 그룹 수정 실패\n"
+		+ "TOPIC_MEMBER 역할(ROLE_TYPE) 수정 API 입니다.\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> update(@Valid @RequestBody FrontGroupsUpdateRequest req) {
 		service.update(req);
 		return RestUtil.ok();
 	}
 
-	@DeleteMapping("/{groupsSeq}")
-	@Operation(summary ="그룹 삭제", description =
+	@DeleteMapping("/{topicMemberSeq}")
+	@Operation(summary = "토픽 참여 회원 삭제", description =
 		  "## Description ##\n"
-		+ "그룹 삭제 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_GROUPS_006 | 그룹 삭제 실패\n"
+		+ "TOPIC_MEMBER 소프트 삭제 API 입니다.\n"
 	)
-	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("groupsSeq") Long groupsSeq, @Parameter(hidden = true) FrontGroupsDeleteRequest req) {
+	public ResponseEntity<ResponseModel<EmptyResponse>> delete(
+			@PathVariable("topicMemberSeq") Long topicMemberSeq,
+			@Parameter(hidden = true) FrontGroupsDeleteRequest req) {
+		req.setTopicMemberSeq(topicMemberSeq);
 		service.delete(req);
 		return RestUtil.ok();
 	}

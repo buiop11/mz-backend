@@ -27,10 +27,10 @@ public class FrontTopicUpdateRequest extends BaseRequest {
 	private Long topicSeq;
 
 	@Schema(description = "", example = "")
-	private Long groupSeq;
-
-	@Schema(description = "", example = "")
 	private Long categorySeq;
+
+	@Schema(description = "선정 후보 시퀀스", example = "")
+	private Long candidateSeq;
 
 	@Schema(description = "", example = "")
 	private String emoji;

@@ -20,11 +20,14 @@ public class FrontTopicSelectListResponse {
 	@Schema(description = "", example = "")
 	private Long topicSeq;
 
-	@Schema(description = "", example = "")
-	private Long groupSeq;
+	@Schema(description = "안건 등록자(OWNER) MEMBER_SEQ — TOPIC_MEMBER 기준", example = "1")
+	private Long memberSeq;
 
 	@Schema(description = "", example = "")
 	private Long categorySeq;
+
+	@Schema(description = "선정 후보 시퀀스", example = "")
+	private Long candidateSeq;
 
 	@Schema(description = "", example = "")
 	private String categoryName;

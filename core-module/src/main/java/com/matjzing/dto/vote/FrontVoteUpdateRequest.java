@@ -33,9 +33,6 @@ public class FrontVoteUpdateRequest extends BaseRequest {
 	private Long candidateSeq;
 
 	@Schema(description = "", example = "")
-	private Long userSeq;
-
-	@Schema(description = "", example = "")
 	private String comment;
 
 	/*

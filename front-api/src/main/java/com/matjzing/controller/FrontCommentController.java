@@ -81,6 +81,7 @@ public class FrontCommentController {
 		+ "댓글 삭제 API 입니다\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("commentSeq") Long commentSeq, @Parameter(hidden = true) FrontCommentDeleteRequest req) {
+		req.setCommentSeq(commentSeq);
 		service.delete(req);
 		return RestUtil.ok();
 	}

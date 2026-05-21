@@ -23,13 +23,10 @@ public class FrontTopicInsertRequest extends BaseRequest {
 	@Schema(description = "파일 목록")
     private List<FileUploadDto> fileList;
 
-	@Schema(description = "", example = "")
+	@Schema(hidden = true)
 	private Long topicSeq;
 
-	@Schema(description = "", example = "")
-	private Long groupSeq;
-
-	@Schema(description = "", example = "")
+	@Schema(description = "", example = "1")
 	private Long categorySeq;
 
 	@Schema(description = "", example = "")

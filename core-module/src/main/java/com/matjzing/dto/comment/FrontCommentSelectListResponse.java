@@ -23,6 +23,9 @@ public class FrontCommentSelectListResponse {
 	@Schema(description = "후보자(대상) 일련번호", example = "")
 	private Long candidateSeq;
 
+	@Schema(description = "작성 회원 시퀀스", example = "")
+	private Long memberSeq;
+
 	@Schema(description = "댓글 내용", example = "")
 	private String content;
 

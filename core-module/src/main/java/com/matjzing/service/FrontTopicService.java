@@ -41,10 +41,12 @@ public class FrontTopicService {
 	private final CommonFileService commonFileService;
 
 	public List<FrontTopicSelectListResponse> list(FrontTopicSelectListRequest req) {
+		MapperUtil.bindMemberSeqFromLogin(req);
 		return mapper.selectFrontTopicList(req);
 	}
 
 	public EPageInfo<FrontTopicSelectPageResponse> page(FrontTopicSelectPageRequest req) {
+		MapperUtil.bindMemberSeqFromLogin(req);
 		PageHelper.startPage(req.getCurrentPage(), 10);
 		/*
 		 	// 기간검색 1개 일 경우
@@ -117,6 +119,7 @@ public class FrontTopicService {
 
 	public FrontTopicSelectResponse detail(FrontTopicSelectRequest req) {
 
+		MapperUtil.bindMemberSeqFromLogin(req);
 		FrontTopicSelectResponse response = mapper.selectFrontTopic(req);
 
 		// 게시판 상세페이지 일 경우 no-data 케이스 용
@@ -147,6 +150,7 @@ public class FrontTopicService {
 		 */
 		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅
 		mapper.insertFrontTopic(req); // 등록처리
+		mapper.insertTopicMember(req); // TOPIC_MEMBER OWNER (등록자)
 
 		/*
 			// 등록 후 등록된 일련번호로 추가 작업이 필요할 때
@@ -169,13 +173,19 @@ public class FrontTopicService {
 			commonFileService.insertFileList(true, FileTargetCd.bbs, fileList.toArray(new FileUploadDto[fileList.size()-1]) , frontTopicSeq, Integer.class);
 		 */
 
-		mapper.updateFrontTopic(req); // 수정처리
+		Long affected = mapper.updateFrontTopic(req);
+		if (affected == null || affected.longValue() == 0L) {
+			throw new NotfoundException();
+		}
 	}
 
 	@Transactional
 	public void delete(FrontTopicDeleteRequest req) {
 		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅
-		mapper.deleteFrontTopic(req); // 수정처리
+		Long affected = mapper.deleteFrontTopic(req);
+		if (affected == null || affected.longValue() == 0L) {
+			throw new NotfoundException();
+		}
 	}
 
 }

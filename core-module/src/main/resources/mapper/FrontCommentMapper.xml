@@ -16,6 +16,7 @@
 		SELECT
 			  COMMENT_SEQ /*댓글 일련번호*/
 			, CANDIDATE_SEQ /*후보자(대상) 일련번호*/
+			, MEMBER_SEQ /*회원 시퀀스*/
 			, CONTENT /*댓글 내용*/
 			, USE_YN /*사용 여부*/
 			, REGISTER_SEQ /*등록자 일련번호*/
@@ -38,6 +39,7 @@
 		SELECT
 			  COMMENT_SEQ /*댓글 일련번호*/
 			, CANDIDATE_SEQ /*후보자(대상) 일련번호*/
+			, MEMBER_SEQ /*회원 시퀀스*/
 			, CONTENT /*댓글 내용*/
 			, USE_YN /*사용 여부*/
 			, REGISTER_SEQ /*등록자 일련번호*/
@@ -59,6 +61,7 @@
 		/* com.matjzing.mapper.FrontCommentMapper.insertFrontComment */
 		INSERT INTO COMMENT (
 			  CANDIDATE_SEQ /*후보자(대상) 일련번호*/
+			, MEMBER_SEQ /*회원 시퀀스*/
 			, CONTENT /*댓글 내용*/
 			, USE_YN /*사용 여부*/
 			, REGISTER_SEQ /*등록자 일련번호*/
@@ -69,6 +72,7 @@
 			, UPDATE_DT /*수정 일시*/
 		) VALUES (
 			  #{candidateSeq}
+			, COALESCE(#{memberSeq}, #{registerSeq})
 			, #{content}
 			, TRUE
 			, #{registerSeq}

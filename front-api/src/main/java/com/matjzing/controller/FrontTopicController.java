@@ -41,6 +41,7 @@ public class FrontTopicController {
 	@Operation(summary ="안건 List 조회", description =
 		  "## Description ##\n"
 		+ "안건 List 조회 API 입니다\n"
+		+ "로그인 회원이 TOPIC_MEMBER(OWNER 또는 PARTICIPANT)로 포함된 안건만 조회됩니다.\n"
 	)
 	public ResponseEntity<ResponseModel<List<FrontTopicSelectListResponse>>> list(FrontTopicSelectListRequest req) {
 		return RestUtil.ok(service.list(req));
@@ -50,6 +51,7 @@ public class FrontTopicController {
 	@Operation(summary ="안건 Page 조회", description =
 		  "## Description ##\n"
 		+ "안건 Page 조회 API 입니다\n"
+		+ "로그인 회원이 TOPIC_MEMBER로 포함된 안건만 조회됩니다.\n"
 	)
 	public ResponseEntity<ResponseModel<EPageInfo<FrontTopicSelectPageResponse>>> page(FrontTopicSelectPageRequest req) {
 		return RestUtil.ok(service.page(req));
@@ -59,8 +61,10 @@ public class FrontTopicController {
 	@Operation(summary ="안건 상세 조회", description =
 		  "## Description ##\n"
 		+ "안건 상세 API 입니다\n"
+		+ "TOPIC_MEMBER에 포함된 회원만 조회할 수 있습니다.\n"
 	)
 	public ResponseEntity<ResponseModel<FrontTopicSelectResponse>> detail(@PathVariable("topicSeq") Long topicSeq, @Parameter(hidden = true) FrontTopicSelectRequest req) {
+		req.setTopicSeq(topicSeq);
 		return RestUtil.ok(service.detail(req));
 	}
 
@@ -68,6 +72,7 @@ public class FrontTopicController {
 	@Operation(summary ="안건 등록", description =
 		  "## Description ##\n"
 		+ "안건 등록 API 입니다\n"
+		+ "`memberSeq`: JWT/요청으로 감사 필드(REGISTER_SEQ 등) 채움. 안건 회원 관계는 TOPIC_MEMBER(OWNER/PARTICIPANT)만 사용.\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> insert(@Valid @RequestBody FrontTopicInsertRequest req) {
 		service.insert(req);
@@ -78,6 +83,7 @@ public class FrontTopicController {
 	@Operation(summary ="안건 수정", description =
 		  "## Description ##\n"
 		+ "안건 수정 API 입니다\n"
+		+ "수정은 TOPIC_MEMBER에서 ROLE_TYPE=OWNER 인 회원만 가능. `memberSeq`는 JWT/요청으로 감사 필드에 반영.\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> update(@Valid @RequestBody FrontTopicUpdateRequest req) {
 		service.update(req);
@@ -88,8 +94,10 @@ public class FrontTopicController {
 	@Operation(summary ="안건 삭제", description =
 		  "## Description ##\n"
 		+ "안건 삭제 API 입니다\n"
+		+ "삭제(소프트)는 OWNER만. `memberSeq`는 JWT/요청으로 감사 필드에 반영.\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("topicSeq") Long topicSeq, @Parameter(hidden = true) FrontTopicDeleteRequest req) {
+		req.setTopicSeq(topicSeq);
 		service.delete(req);
 		return RestUtil.ok();
 	}

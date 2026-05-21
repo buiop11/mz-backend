@@ -19,19 +19,39 @@ public class MapperUtil {
 
 	public static void setBaseRequest(final BaseRequest dto) {
 		LoginUtil loginUtil = new LoginUtil();
-		Long loginUserSeq = loginUtil.getLoginUserSeq();
-		if (null == loginUserSeq) {
+		Long fromJwt = loginUtil.getLoginUserSeq();
+		Long loginUserSeq;
+		if (fromJwt != null && fromJwt != 0L) {
+			loginUserSeq = fromJwt;
+		} else if (dto.getMemberSeq() != null) {
+			loginUserSeq = dto.getMemberSeq();
+		} else {
 			loginUserSeq = 0L;
 		}
 		LocalDateTime now = LocalDateTime.now();
 		String ip = RestUtil.getClientIp();
 
+		dto.setMemberSeq(loginUserSeq);
 		dto.setRegisterSeq(loginUserSeq);
 		dto.setRegistrationDt(now);
 		dto.setUpdaterSeq(loginUserSeq);
 		dto.setUpdateDt(now);
 		dto.setRegisterIp(ip);
 		dto.setUpdaterIp(ip);
+	}
+
+	/**
+	 * 조회 API용: JWT의 회원 seq를 memberSeq로 설정합니다(이미 값이 있으면 유지).
+	 */
+	public static void bindMemberSeqFromLogin(BaseRequest dto) {
+		if (dto.getMemberSeq() != null && dto.getMemberSeq() != 0L) {
+			return;
+		}
+		LoginUtil loginUtil = new LoginUtil();
+		Long fromJwt = loginUtil.getLoginUserSeq();
+		if (fromJwt != null && fromJwt != 0L) {
+			dto.setMemberSeq(fromJwt);
+		}
 	}
 
 	public static void setBatchBaseRequest(final BaseRequest dto) {

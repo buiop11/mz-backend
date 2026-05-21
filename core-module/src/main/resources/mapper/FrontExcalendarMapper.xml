@@ -80,7 +80,7 @@
 	</select>
 
 	<!-- 외부캘린더 등록 -->
-	<insert id="insertFrontExcalendar" parameterType="frontExcalendarInsertRequest" useGeneratedKeys="true" keyProperty="excalendarSeq">
+	<insert id="insertFrontExcalendar" parameterType="frontExcalendarInsertRequest" useGeneratedKeys="true" keyProperty="calendarSeq">
 		/* com.matjzing.mapper.FrontExcalendarMapper.insertFrontExcalendar */
 		INSERT INTO EXCALENDAR (
 			  USER_SEQ /**/

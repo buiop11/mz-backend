@@ -70,6 +70,7 @@ public class FrontCandidateController {
 		+ "후보 상세 API 입니다\n"
 	)
 	public ResponseEntity<ResponseModel<FrontCandidateSelectResponse>> detail(@PathVariable("candidateSeq") Long candidateSeq, @Parameter(hidden = true) FrontCandidateSelectRequest req) {
+		req.setCandidateSeq(candidateSeq);
 		return RestUtil.ok(service.detail(req));
 	}
 
@@ -99,6 +100,7 @@ public class FrontCandidateController {
 		+ "후보 삭제 API 입니다\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("candidateSeq") Long candidateSeq, @Parameter(hidden = true) FrontCandidateDeleteRequest req) {
+		req.setCandidateSeq(candidateSeq);
 		service.delete(req);
 		return RestUtil.ok();
 	}

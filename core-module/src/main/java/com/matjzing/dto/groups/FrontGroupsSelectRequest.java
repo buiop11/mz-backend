@@ -5,20 +5,15 @@ import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 /**
- * @author: 김아진
- * @date: 2026-05-11
- * @pname: 관리자
- * @desc: 관리자 상세 조회 요청 모델 작성
+ * 토픽 참여 회원(TOPIC_MEMBER) 상세 조회 요청
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-@Schema(description = "그룹 상세 조회 요청 모델")
+@Schema(description = "토픽 참여 회원 상세 조회 요청")
 @Alias("frontGroupsSelectRequest")
 public class FrontGroupsSelectRequest {
 
-	@Schema(description = "", example = "")
-	private Long groupSeq;
-	/*
-		@NotNull(message = "필수값입니다.")
-	 */
+	@Schema(description = "토픽 참여 시퀀스", example = "1")
+	private Long topicMemberSeq;
+
 }

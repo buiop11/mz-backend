@@ -98,7 +98,7 @@ public class FrontLoginService {
 
         FrontLoginSelectResponse member = mapper.selectMemberByGoogleSub(sub);
         if (ObjectUtils.isEmpty(member)) {
-            registerGoogleMember(sub, payload);
+            registerGoogleMember(sub, payload);  // member 테이블 등록
             member = mapper.selectMemberByGoogleSub(sub);
         }
         if (ObjectUtils.isEmpty(member)) {

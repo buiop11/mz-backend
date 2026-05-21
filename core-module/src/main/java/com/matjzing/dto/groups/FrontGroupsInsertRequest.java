@@ -2,37 +2,25 @@ package com.matjzing.dto.groups;
 
 import com.matjzing.dto.common.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.matjzing.dto.file.FileUploadDto;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
-import java.util.List;
-
 /**
- * @author: 김아진
- * @date: 2026-05-11
- * @pname: 관리자
- * @desc: 관리자 등록 요청 모델 작성
+ * 토픽 참여 회원(TOPIC_MEMBER) 등록 요청
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-@Schema(description = "그룹 등록 요청 모델")
+@Schema(description = "토픽 참여 회원 등록 요청")
 @Alias("frontGroupsInsertRequest")
 public class FrontGroupsInsertRequest extends BaseRequest {
 
-	@Schema(description = "파일 목록")
-    private List<FileUploadDto> fileList;
+	@Schema(hidden = true)
+	private Long topicMemberSeq;
 
-	@Schema(description = "", example = "")
-	private Long groupSeq;
+	@Schema(description = "토픽 시퀀스", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+	private Long topicSeq;
 
-	@Schema(description = "", example = "")
-	private String name;
+	@Schema(description = "참여 역할 (OWNER|PARTICIPANT)", example = "PARTICIPANT")
+	private String roleType;
 
-	@Schema(description = "", example = "")
-	private String inviteCode;
-
-	/*
-		@NotNull(message = "필수값입니다.")
-	 */
 }

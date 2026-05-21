@@ -38,6 +38,9 @@ public class FrontMemberInsertRequest extends BaseRequest {
 	@Schema(description = "이름", hidden = true)
 	private String name;
 
+	@Schema(description = "닉네임", hidden = true)
+	private String nickname;
+
 	@Schema(description = "전화번호", hidden = true)
 	private String mobilePhoneNo;
 

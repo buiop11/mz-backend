@@ -7,34 +7,63 @@
  * date: 2026-05-11
  * pname: 관리자
  * desc: 관리자 매퍼 XML 작성
+ * 회원–안건 관계는 TOPIC_MEMBER(MEMBER_SEQ, ROLE_TYPE=OWNER|PARTICIPANT)만 사용.
+ TOPIC에는 MEMBER_SEQ 없음.
  -->
 <mapper namespace="com.matjzing.mapper.FrontTopicMapper">
-	
-	<!-- 안건 List 조회 -->
+
+	<sql id="ownerMemberSeqSubquery">
+		(
+			SELECT tm.MEMBER_SEQ
+			FROM TOPIC_MEMBER tm
+			WHERE tm.TOPIC_SEQ = t.TOPIC_SEQ
+			  AND tm.ROLE_TYPE = 'OWNER'
+			  AND tm.USE_YN = TRUE
+			ORDER BY tm.TOPIC_MEMBER_SEQ
+			LIMIT 1
+		)
+	</sql>
+
+	<!-- 안건 List 조회: TOPIC_MEMBER에 속한 안건만 -->
 	<select id="selectFrontTopicList" parameterType="frontTopicSelectListRequest" resultType="frontTopicSelectListResponse">
         /* com.matjzing.mapper.FrontTopicMapper.selectFrontTopicList */
 		SELECT
-			  TOPIC_SEQ /**/
-			, GROUP_SEQ /**/
-			, CATEGORY_SEQ /**/
+			  t.TOPIC_SEQ /**/
+			, <include refid="ownerMemberSeqSubquery"/> AS memberSeq
+			, t.CATEGORY_SEQ /**/
+			, t.CANDIDATE_SEQ /**/
 			, (SELECT NAME FROM CATEGORY WHERE CATEGORY_SEQ = t.CATEGORY_SEQ) AS CATEGORY_NAME
-			, EMOJI
-			, TITLE /**/
-			, STATUS /**/
-			, GOOGLE_EVENT_ID /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			, t.EMOJI
+			, t.TITLE /**/
+			, t.STATUS /**/
+			, t.GOOGLE_EVENT_ID /**/
+			, t.USE_YN /**/
+			, t.REGISTER_SEQ /**/
+			, t.REGISTER_IP /**/
+			, t.REGISTRATION_DT /**/
+			, t.UPDATER_SEQ /**/
+			, t.UPDATER_IP /**/
+			, t.UPDATE_DT /**/
 		FROM
 			TOPIC t
 		WHERE
-			USE_YN = true
+			t.USE_YN = true
+		<choose>
+			<when test="memberSeq != null">
+				AND EXISTS (
+					SELECT 1
+					FROM TOPIC_MEMBER tm
+					WHERE tm.TOPIC_SEQ = t.TOPIC_SEQ
+					  AND tm.MEMBER_SEQ = #{memberSeq}
+					  AND tm.USE_YN = TRUE
+				)
+			</when>
+			<otherwise>
+				AND 1 = 0
+			</otherwise>
+		</choose>
 		<if test="categorySeq != null">
-			AND CATEGORY_SEQ = #{categorySeq}
+			AND t.CATEGORY_SEQ = #{categorySeq}
 		</if>
 	</select>
 
@@ -42,62 +71,92 @@
 	<select id="selectFrontTopicPage" parameterType="frontTopicSelectPageRequest" resultType="frontTopicSelectPageResponse">
 		/* com.matjzing.mapper.FrontTopicMapper.selectFrontTopicPage */
 		SELECT
-			  TOPIC_SEQ /**/
-			, GROUP_SEQ /**/
-			, CATEGORY_SEQ /**/
+			  t.TOPIC_SEQ /**/
+			, <include refid="ownerMemberSeqSubquery"/> AS memberSeq
+			, t.CATEGORY_SEQ /**/
+			, t.CANDIDATE_SEQ /**/
 			, (SELECT NAME FROM CATEGORY WHERE CATEGORY_SEQ = t.CATEGORY_SEQ) AS CATEGORY_NAME
-			, EMOJI
-			, TITLE /**/
-			, STATUS /**/
-			, GOOGLE_EVENT_ID /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			, t.EMOJI
+			, t.TITLE /**/
+			, t.STATUS /**/
+			, t.GOOGLE_EVENT_ID /**/
+			, t.USE_YN /**/
+			, t.REGISTER_SEQ /**/
+			, t.REGISTER_IP /**/
+			, t.REGISTRATION_DT /**/
+			, t.UPDATER_SEQ /**/
+			, t.UPDATER_IP /**/
+			, t.UPDATE_DT /**/
 		FROM
 			TOPIC t
 		WHERE
-			USE_YN = true
+			t.USE_YN = true
+		<choose>
+			<when test="memberSeq != null">
+				AND EXISTS (
+					SELECT 1
+					FROM TOPIC_MEMBER tm
+					WHERE tm.TOPIC_SEQ = t.TOPIC_SEQ
+					  AND tm.MEMBER_SEQ = #{memberSeq}
+					  AND tm.USE_YN = TRUE
+				)
+			</when>
+			<otherwise>
+				AND 1 = 0
+			</otherwise>
+		</choose>
 		<if test="categorySeq != null">
-			AND CATEGORY_SEQ = #{categorySeq}
+			AND t.CATEGORY_SEQ = #{categorySeq}
 		</if>
 	</select>
 
 
-	<!-- 안건 상세 조회 -->
+	<!-- 안건 상세 조회: 멤버만 -->
 	<select id="selectFrontTopic" parameterType="frontTopicSelectRequest" resultType="frontTopicSelectResponse">
 		/* com.matjzing.mapper.FrontTopicMapper.selectFrontTopic */
 		SELECT
-			  TOPIC_SEQ /**/
-			, GROUP_SEQ /**/
-			, CATEGORY_SEQ /**/
+			  t.TOPIC_SEQ /**/
+			, <include refid="ownerMemberSeqSubquery"/> AS memberSeq
+			, t.CATEGORY_SEQ /**/
+			, t.CANDIDATE_SEQ /**/
 			, (SELECT NAME FROM CATEGORY WHERE CATEGORY_SEQ = t.CATEGORY_SEQ) AS CATEGORY_NAME
-			, EMOJI
-			, TITLE /**/
-			, STATUS /**/
-			, GOOGLE_EVENT_ID /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			, t.EMOJI
+			, t.TITLE /**/
+			, t.STATUS /**/
+			, t.GOOGLE_EVENT_ID /**/
+			, t.USE_YN /**/
+			, t.REGISTER_SEQ /**/
+			, t.REGISTER_IP /**/
+			, t.REGISTRATION_DT /**/
+			, t.UPDATER_SEQ /**/
+			, t.UPDATER_IP /**/
+			, t.UPDATE_DT /**/
 		FROM
 			TOPIC t
 		WHERE
-			TOPIC_SEQ = #{topicSeq}
+			t.TOPIC_SEQ = #{topicSeq}
+			AND t.USE_YN = TRUE
+		<choose>
+			<when test="memberSeq != null">
+				AND EXISTS (
+					SELECT 1
+					FROM TOPIC_MEMBER tm
+					WHERE tm.TOPIC_SEQ = t.TOPIC_SEQ
+					  AND tm.MEMBER_SEQ = #{memberSeq}
+					  AND tm.USE_YN = TRUE
+				)
+			</when>
+			<otherwise>
+				AND 1 = 0
+			</otherwise>
+		</choose>
 	</select>
 
-	<!-- 안건 등록 -->
+	<!-- 안건 등록 (TOPIC에는 회원 컬럼 없음) -->
 	<insert id="insertFrontTopic" parameterType="frontTopicInsertRequest" useGeneratedKeys="true" keyProperty="topicSeq">
 		/* com.matjzing.mapper.FrontTopicMapper.insertFrontTopic */
 		INSERT INTO TOPIC (
-			  GROUP_SEQ /**/
-			, CATEGORY_SEQ /**/
+			  CATEGORY_SEQ /**/
 			, EMOJI
 			, TITLE /**/
 			, STATUS /**/
@@ -110,8 +169,7 @@
 			, UPDATER_IP /**/
 			, UPDATE_DT /**/
 		) VALUES (
-			  #{groupSeq}
-			, #{categorySeq}
+			  #{categorySeq}
 			, #{emoji}
 			, #{title}
 			, #{status}
@@ -126,24 +184,70 @@
 		)
 	</insert>
 
-	<!-- 안건 수정 -->
+	<!-- 등록자 = TOPIC_MEMBER OWNER (중복 시 IGNORE) -->
+	<insert id="insertTopicMember" parameterType="frontTopicInsertRequest">
+		/* com.matjzing.mapper.FrontTopicMapper.insertTopicMember */
+		INSERT IGNORE INTO TOPIC_MEMBER (
+			  TOPIC_SEQ /**/
+			, MEMBER_SEQ /**/
+			, ROLE_TYPE /**/
+			, JOIN_DT /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		) VALUES (
+			  #{topicSeq}
+			, COALESCE(#{memberSeq}, #{registerSeq})
+			, 'OWNER'
+			, NOW(3)
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 안건 수정: OWNER만 -->
     <update id="updateFrontTopic" parameterType="frontTopicUpdateRequest">
 		/* com.matjzing.mapper.FrontTopicMapper.updateFrontTopic */
     	UPDATE TOPIC SET
 			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
 			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
 			, UPDATE_DT = NOW(3) /*수정_일시*/
-			, GROUP_SEQ = #{groupSeq} /**/
 			, CATEGORY_SEQ = #{categorySeq} /**/
+			, CANDIDATE_SEQ = #{candidateSeq} /**/
 			, EMOJI = #{emoji} /**/
 			, TITLE = #{title} /**/
 			, STATUS = #{status} /**/
 			, GOOGLE_EVENT_ID = #{googleEventId} /**/
 		WHERE
 			TOPIC_SEQ = #{topicSeq}
+			AND USE_YN = TRUE
+		<choose>
+			<when test="memberSeq != null">
+				AND EXISTS (
+					SELECT 1
+					FROM TOPIC_MEMBER tm
+					WHERE tm.TOPIC_SEQ = #{topicSeq}
+					  AND tm.MEMBER_SEQ = #{memberSeq}
+					  AND tm.ROLE_TYPE = 'OWNER'
+					  AND tm.USE_YN = TRUE
+				)
+			</when>
+			<otherwise>
+				AND 1 = 0
+			</otherwise>
+		</choose>
 	</update>
 
-	<!-- 안건 삭제 -->
+	<!-- 안건 삭제: OWNER만 -->
     <update id="deleteFrontTopic" parameterType="frontTopicDeleteRequest">
 		/* com.matjzing.mapper.FrontTopicMapper.deleteFrontTopic */
     	UPDATE TOPIC SET
@@ -153,6 +257,22 @@
 			, USE_YN = FALSE
 		WHERE
 			TOPIC_SEQ = #{topicSeq}
+			AND USE_YN = TRUE
+		<choose>
+			<when test="memberSeq != null">
+				AND EXISTS (
+					SELECT 1
+					FROM TOPIC_MEMBER tm
+					WHERE tm.TOPIC_SEQ = #{topicSeq}
+					  AND tm.MEMBER_SEQ = #{memberSeq}
+					  AND tm.ROLE_TYPE = 'OWNER'
+					  AND tm.USE_YN = TRUE
+				)
+			</when>
+			<otherwise>
+				AND 1 = 0
+			</otherwise>
+		</choose>
 	</update>
 
 </mapper>

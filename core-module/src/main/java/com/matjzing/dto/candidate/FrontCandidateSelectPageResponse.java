@@ -23,6 +23,9 @@ public class FrontCandidateSelectPageResponse {
 	@Schema(description = "", example = "")
 	private Long topicSeq;
 
+	@Schema(description = "제안 회원 시퀀스", example = "")
+	private Long memberSeq;
+
 	@Schema(description = "", example = "")
 	private String name;
 

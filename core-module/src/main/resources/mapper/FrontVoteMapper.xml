@@ -17,7 +17,7 @@
 			  VOTE_SEQ /**/
 			, TOPIC_SEQ /**/
 			, CANDIDATE_SEQ /**/
-			, USER_SEQ /**/
+			, MEMBER_SEQ /**/
 			, COMMENT /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
@@ -39,7 +39,7 @@
 			  VOTE_SEQ /**/
 			, TOPIC_SEQ /**/
 			, CANDIDATE_SEQ /**/
-			, USER_SEQ /**/
+			, MEMBER_SEQ /**/
 			, COMMENT /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
@@ -62,7 +62,7 @@
 			  VOTE_SEQ /**/
 			, TOPIC_SEQ /**/
 			, CANDIDATE_SEQ /**/
-			, USER_SEQ /**/
+			, MEMBER_SEQ /**/
 			, COMMENT /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
@@ -85,7 +85,7 @@
 		INSERT INTO VOTE (
 			  TOPIC_SEQ /**/
 			, CANDIDATE_SEQ /**/
-			, USER_SEQ /**/
+			, MEMBER_SEQ /**/
 			, COMMENT /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
@@ -97,7 +97,7 @@
 		) VALUES (
 			  #{topicSeq}
 			, #{candidateSeq}
-			, #{userSeq}
+			, COALESCE(#{memberSeq}, #{registerSeq})
 			, #{comment}
 			, TRUE
 			, #{registerSeq}
@@ -118,7 +118,7 @@
 			, UPDATE_DT = NOW(3) /*수정_일시*/
 			, TOPIC_SEQ = #{topicSeq} /**/
 			, CANDIDATE_SEQ = #{candidateSeq} /**/
-			, USER_SEQ = #{userSeq} /**/
+			, MEMBER_SEQ = COALESCE(#{memberSeq}, #{registerSeq}) /**/
 			, COMMENT = #{comment} /**/
 		WHERE
 			VOTE_SEQ = #{voteSeq}

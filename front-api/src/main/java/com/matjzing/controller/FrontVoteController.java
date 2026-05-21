@@ -73,6 +73,7 @@ public class FrontVoteController {
 //		+ "ERR_VOTE_003 | 투표 상세 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<FrontVoteSelectResponse>> detail(@PathVariable("voteSeq") Long voteSeq, @Parameter(hidden = true) FrontVoteSelectRequest req) {
+		req.setVoteSeq(voteSeq);
 		return RestUtil.ok(service.detail(req));
 	}
 
@@ -80,6 +81,7 @@ public class FrontVoteController {
 	@Operation(summary ="투표 등록", description =
 		  "## Description ##\n"
 		+ "투표 등록 API 입니다\n"
+		+ "`memberSeq`: JWT 우선, 없으면 body의 `memberSeq`로 VOTE.MEMBER_SEQ 및 REGISTER_SEQ/UPDATER_SEQ가 채워집니다.\n"
 //		+ "## 에러코드 ##\n"
 //		+ "코드|설명\n"
 //		+ "-|-\n"
@@ -94,6 +96,7 @@ public class FrontVoteController {
 	@Operation(summary ="투표 수정", description =
 		  "## Description ##\n"
 		+ "투표 수정 API 입니다\n"
+		+ "`memberSeq`: JWT 우선, 없으면 body의 `memberSeq`로 VOTE.MEMBER_SEQ 및 UPDATER_SEQ가 채워집니다.\n"
 //		+ "## 에러코드 ##\n"
 //		+ "코드|설명\n"
 //		+ "-|-\n"
@@ -108,12 +111,14 @@ public class FrontVoteController {
 	@Operation(summary ="투표 삭제", description =
 		  "## Description ##\n"
 		+ "투표 삭제 API 입니다\n"
+		+ "`memberSeq`(MEMBER_SEQ): JWT 우선, 없으면 `memberSeq`로 UPDATER_SEQ가 채워집니다.\n"
 //		+ "## 에러코드 ##\n"
 //		+ "코드|설명\n"
 //		+ "-|-\n"
 //		+ "ERR_VOTE_006 | 투표 삭제 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("voteSeq") Long voteSeq, @Parameter(hidden = true) FrontVoteDeleteRequest req) {
+		req.setVoteSeq(voteSeq);
 		service.delete(req);
 		return RestUtil.ok();
 	}

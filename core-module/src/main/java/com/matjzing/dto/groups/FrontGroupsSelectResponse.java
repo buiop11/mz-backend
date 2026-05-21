@@ -1,34 +1,36 @@
 package com.matjzing.dto.groups;
 
-import com.matjzing.dto.file.FileSelectResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 /**
- * @author: 김아진
- * @date: 2026-05-11
- * @pname: 관리자
- * @desc: 관리자 상세 조회 응답 모델 작성
+ * 토픽 참여 회원(TOPIC_MEMBER) 상세 조회 응답
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-@Schema(description = "그룹 상세 조회 응답 모델")
+@Schema(description = "토픽 참여 회원 상세 조회 응답")
 @Alias("frontGroupsSelectResponse")
 public class FrontGroupsSelectResponse {
 
-	@Schema(description = "파일 목록")
-	private List<FileSelectResponse> fileList;
+	@Schema(description = "토픽 참여 시퀀스")
+	private Long topicMemberSeq;
 
-	@Schema(description = "", example = "")
-	private Long groupSeq;
+	@Schema(description = "토픽 시퀀스")
+	private Long topicSeq;
 
-	@Schema(description = "", example = "")
-	private String name;
+	@Schema(description = "회원 시퀀스")
+	private Long memberSeq;
 
-	@Schema(description = "", example = "")
-	private String inviteCode;
+	@Schema(description = "참여 역할")
+	private String roleType;
+
+	@Schema(description = "참여 일시")
+	private LocalDateTime joinDt;
+
+	@Schema(description = "사용 여부")
+	private Boolean useYn;
 
 }

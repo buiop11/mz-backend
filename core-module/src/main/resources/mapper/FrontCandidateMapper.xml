@@ -16,6 +16,7 @@
 		SELECT
 			  CANDIDATE_SEQ /**/
 			, TOPIC_SEQ /**/
+			, MEMBER_SEQ /**/
 			, NAME /**/
 			, INFO /**/
 			, PRICE /**/
@@ -43,6 +44,7 @@
 		SELECT
 			  CANDIDATE_SEQ /**/
 			, TOPIC_SEQ /**/
+			, MEMBER_SEQ /**/
 			, NAME /**/
 			, INFO /**/
 			, PRICE /**/
@@ -84,6 +86,7 @@
 		SELECT
 			  CANDIDATE_SEQ /**/
 			, TOPIC_SEQ /**/
+			, MEMBER_SEQ /**/
 			, NAME /**/
 			, INFO /**/
 			, PRICE /**/
@@ -108,6 +111,7 @@
 		/* com.matjzing.mapper.FrontCandidateMapper.insertFrontCandidate */
 		INSERT INTO CANDIDATE (
 			  TOPIC_SEQ /**/
+			, MEMBER_SEQ /**/
 			, NAME /**/
 			, INFO /**/
 			, PRICE /**/
@@ -123,7 +127,9 @@
 			, UPDATE_DT /**/
 		) VALUES (
 			  #{topicSeq}
+			, COALESCE(#{memberSeq}, #{registerSeq})
 			, #{name}
+			, #{info}
 			, #{price}
 			, #{imageUrl}
 			, #{linkUrl}
@@ -146,6 +152,7 @@
 			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
 			, UPDATE_DT = NOW(3) /*수정_일시*/
 			, TOPIC_SEQ = #{topicSeq} /**/
+			, MEMBER_SEQ = COALESCE(#{memberSeq}, MEMBER_SEQ) /**/
 			, NAME = #{name} /**/
 			, INFO = #{info} /**/
 			, PRICE = #{price} /**/

@@ -3,82 +3,82 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--
- * author: 김아진
- * date: 2026-05-11
- * pname: 관리자
- * desc: 관리자 매퍼 XML 작성
+ * 토픽 참여 회원 (TOPIC_MEMBER) — 기존 TOPIC_GROUPS 대체
  -->
 <mapper namespace="com.matjzing.mapper.FrontGroupsMapper">
-	
-	<!-- 그룹 List 조회 -->
+
+	<sql id="topicMemberColumns">
+		  TOPIC_MEMBER_SEQ /**/
+		, TOPIC_SEQ /**/
+		, MEMBER_SEQ /**/
+		, ROLE_TYPE /**/
+		, JOIN_DT /**/
+		, USE_YN /**/
+		, REGISTER_SEQ /**/
+		, REGISTER_IP /**/
+		, REGISTRATION_DT /**/
+		, UPDATER_SEQ /**/
+		, UPDATER_IP /**/
+		, UPDATE_DT /**/
+	</sql>
+
+	<sql id="topicMemberWhere">
+		USE_YN = TRUE
+		<if test="topicSeq != null">
+			AND TOPIC_SEQ = #{topicSeq}
+		</if>
+		<if test="memberSeq != null">
+			AND MEMBER_SEQ = #{memberSeq}
+		</if>
+		<if test="roleType != null and roleType != ''">
+			AND ROLE_TYPE = #{roleType}
+		</if>
+	</sql>
+
+	<!-- 토픽 참여 회원 List 조회 -->
 	<select id="selectFrontGroupsList" parameterType="frontGroupsSelectListRequest" resultType="frontGroupsSelectListResponse">
         /* com.matjzing.mapper.FrontGroupsMapper.selectFrontGroupsList */
 		SELECT
-			  GROUP_SEQ /**/
-			, NAME /**/
-			, INVITE_CODE /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			<include refid="topicMemberColumns"/>
 		FROM
-			TOPIC_GROUPS
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
+			TOPIC_MEMBER
+		WHERE
+			<include refid="topicMemberWhere"/>
+		ORDER BY TOPIC_MEMBER_SEQ
 	</select>
 
-	<!-- 그룹 Page 조회 -->
+	<!-- 토픽 참여 회원 Page 조회 -->
 	<select id="selectFrontGroupsPage" parameterType="frontGroupsSelectPageRequest" resultType="frontGroupsSelectPageResponse">
 		/* com.matjzing.mapper.FrontGroupsMapper.selectFrontGroupsPage */
 		SELECT
-			  GROUP_SEQ /**/
-			, NAME /**/
-			, INVITE_CODE /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			<include refid="topicMemberColumns"/>
 		FROM
-			TOPIC_GROUPS
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
+			TOPIC_MEMBER
+		WHERE
+			<include refid="topicMemberWhere"/>
+		ORDER BY TOPIC_MEMBER_SEQ
 	</select>
 
-
-	<!-- 그룹 상세 조회 -->
+	<!-- 토픽 참여 회원 상세 조회 -->
 	<select id="selectFrontGroups" parameterType="frontGroupsSelectRequest" resultType="frontGroupsSelectResponse">
 		/* com.matjzing.mapper.FrontGroupsMapper.selectFrontGroups */
 		SELECT
-			  GROUP_SEQ /**/
-			, NAME /**/
-			, INVITE_CODE /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			<include refid="topicMemberColumns"/>
 		FROM
-			TOPIC_GROUPS
+			TOPIC_MEMBER
 		WHERE
-			GROUP_SEQ = #{groupSeq}
-<!--		<if test="@kr.aws.demo.util.MapperUtil@isNotEmpty(id)">-->
-<!--		</if>-->
+			TOPIC_MEMBER_SEQ = #{topicMemberSeq}
+			AND USE_YN = TRUE
 	</select>
 
-	<!-- 그룹 등록 -->
-	<insert id="insertFrontGroups" parameterType="frontGroupsInsertRequest" useGeneratedKeys="true" keyProperty="groupsSeq">
+	<!-- 토픽 참여 회원 등록 -->
+	<insert id="insertFrontGroups" parameterType="frontGroupsInsertRequest" useGeneratedKeys="true" keyProperty="topicMemberSeq">
 		/* com.matjzing.mapper.FrontGroupsMapper.insertFrontGroups */
-		INSERT INTO TOPIC_GROUPS (
-			  NAME /**/
-			, INVITE_CODE /**/
+		INSERT INTO TOPIC_MEMBER (
+			  TOPIC_SEQ /**/
+			, MEMBER_SEQ /**/
+			, ROLE_TYPE /**/
+			, JOIN_DT /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
 			, REGISTER_IP /**/
@@ -87,8 +87,10 @@
 			, UPDATER_IP /**/
 			, UPDATE_DT /**/
 		) VALUES (
-			  #{name}
-			, #{inviteCode}
+			  #{topicSeq}
+			, COALESCE(#{memberSeq}, #{registerSeq})
+			, COALESCE(#{roleType}, 'PARTICIPANT')
+			, NOW(3)
 			, TRUE
 			, #{registerSeq}
 			, #{registerIp}
@@ -99,29 +101,31 @@
 		)
 	</insert>
 
-	<!-- 그룹 수정 -->
+	<!-- 토픽 참여 회원 수정 (역할 변경) -->
     <update id="updateFrontGroups" parameterType="frontGroupsUpdateRequest">
 		/* com.matjzing.mapper.FrontGroupsMapper.updateFrontGroups */
-    	UPDATE TOPIC_GROUPS SET
-			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
-			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
-			, UPDATE_DT = NOW(3) /*수정_일시*/
-			, NAME = #{name} /**/
-			, INVITE_CODE = #{inviteCode} /**/
+    	UPDATE TOPIC_MEMBER SET
+			  UPDATER_SEQ = #{updaterSeq}
+			, UPDATER_IP = #{updaterIp}
+			, UPDATE_DT = NOW(3)
+		<if test="roleType != null and roleType != ''">
+			, ROLE_TYPE = #{roleType}
+		</if>
 		WHERE
-			GROUP_SEQ = #{groupSeq}
+			TOPIC_MEMBER_SEQ = #{topicMemberSeq}
+			AND USE_YN = TRUE
 	</update>
 
-	<!-- 그룹 삭제 -->
+	<!-- 토픽 참여 회원 삭제 (소프트) -->
     <update id="deleteFrontGroups" parameterType="frontGroupsDeleteRequest">
 		/* com.matjzing.mapper.FrontGroupsMapper.deleteFrontGroups */
-    	UPDATE TOPIC_GROUPS SET
-			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
-			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
-			, UPDATE_DT = NOW(3) /*수정_일시*/
+    	UPDATE TOPIC_MEMBER SET
+			  UPDATER_SEQ = #{updaterSeq}
+			, UPDATER_IP = #{updaterIp}
+			, UPDATE_DT = NOW(3)
 			, USE_YN = FALSE
 		WHERE
-			GROUP_SEQ = #{groupSeq}
+			TOPIC_MEMBER_SEQ = #{topicMemberSeq}
 	</update>
 
 </mapper>

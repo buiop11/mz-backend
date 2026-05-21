@@ -145,7 +145,7 @@ public class FrontVoteService {
 				throw new CustomException(FrontVoteERRCd.ERR_VOTE_001.toString(), FrontVoteERRCd.ERR_VOTE_001.getDesc());
 			}
 		 */
-		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅
+		MapperUtil.setBaseRequest(req); // memberSeq / JWT → REGISTER_SEQ, VOTE.MEMBER_SEQ
 		mapper.insertFrontVote(req); // 등록처리
 
 		/*

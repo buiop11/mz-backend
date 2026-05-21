@@ -19,6 +19,9 @@ public interface FrontTopicMapper {
 	Page<FrontTopicSelectPageResponse> selectFrontTopicPage(FrontTopicSelectPageRequest req);
 	FrontTopicSelectResponse selectFrontTopic(FrontTopicSelectRequest req);
 	Long insertFrontTopic(FrontTopicInsertRequest req);
+
+	int insertTopicMember(FrontTopicInsertRequest req);
+
 	Long updateFrontTopic(FrontTopicUpdateRequest req);
 	Long deleteFrontTopic(FrontTopicDeleteRequest req);
 	

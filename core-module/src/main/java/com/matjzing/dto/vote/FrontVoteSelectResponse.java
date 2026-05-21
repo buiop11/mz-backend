@@ -31,8 +31,8 @@ public class FrontVoteSelectResponse {
 	@Schema(description = "", example = "")
 	private Long candidateSeq;
 
-	@Schema(description = "", example = "")
-	private Long userSeq;
+	@Schema(description = "투표 회원 시퀀스", example = "")
+	private Long memberSeq;
 
 	@Schema(description = "", example = "")
 	private String comment;

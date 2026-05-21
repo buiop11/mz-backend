@@ -73,6 +73,7 @@ public class FrontExcalendarController {
 //		+ "ERR_EXCALENDAR_003 | 외부캘린더 상세 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<FrontExcalendarSelectResponse>> detail(@PathVariable("excalendarSeq") Long excalendarSeq, @Parameter(hidden = true) FrontExcalendarSelectRequest req) {
+		req.setCalendarSeq(excalendarSeq);
 		return RestUtil.ok(service.detail(req));
 	}
 
@@ -114,6 +115,7 @@ public class FrontExcalendarController {
 //		+ "ERR_EXCALENDAR_006 | 외부캘린더 삭제 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("excalendarSeq") Long excalendarSeq, @Parameter(hidden = true) FrontExcalendarDeleteRequest req) {
+		req.setCalendarSeq(excalendarSeq);
 		service.delete(req);
 		return RestUtil.ok();
 	}
