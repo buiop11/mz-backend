@@ -41,10 +41,6 @@ public class FrontCategoryController {
 	@Operation(summary ="카테고리 List 조회", description =
 		  "## Description ##\n"
 		+ "카테고리 List 조회 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CATEGORY_001 | 카테고리 List 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<List<FrontCategorySelectListResponse>>> list(FrontCategorySelectListRequest req) {
 		return RestUtil.ok(service.list(req));
@@ -73,6 +69,7 @@ public class FrontCategoryController {
 //		+ "ERR_CATEGORY_003 | 카테고리 상세 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<FrontCategorySelectResponse>> detail(@PathVariable("categorySeq") Long categorySeq, @Parameter(hidden = true) FrontCategorySelectRequest req) {
+		req.setCategorySeq(categorySeq);
 		return RestUtil.ok(service.detail(req));
 	}
 
@@ -114,6 +111,7 @@ public class FrontCategoryController {
 //		+ "ERR_CATEGORY_006 | 카테고리 삭제 실패\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("categorySeq") Long categorySeq, @Parameter(hidden = true) FrontCategoryDeleteRequest req) {
+		req.setCategorySeq(categorySeq);
 		service.delete(req);
 		return RestUtil.ok();
 	}

@@ -12,6 +12,14 @@
  -->
 <mapper namespace="com.matjzing.mapper.FrontTopicMapper">
 
+	<select id="countActiveTopic" parameterType="long" resultType="int">
+		/* com.matjzing.mapper.FrontTopicMapper.countActiveTopic */
+		SELECT COUNT(1)
+		FROM TOPIC
+		WHERE TOPIC_SEQ = #{topicSeq}
+		  AND USE_YN = TRUE
+	</select>
+
 	<sql id="ownerMemberSeqSubquery">
 		(
 			SELECT tm.MEMBER_SEQ
@@ -111,7 +119,7 @@
 	</select>
 
 
-	<!-- 안건 상세 조회: 멤버만 -->
+	<!-- 안건 상세 조회: OWNER만 수정 가능 -->
 	<select id="selectFrontTopic" parameterType="frontTopicSelectRequest" resultType="frontTopicSelectResponse">
 		/* com.matjzing.mapper.FrontTopicMapper.selectFrontTopic */
 		SELECT
@@ -143,6 +151,7 @@
 					FROM TOPIC_MEMBER tm
 					WHERE tm.TOPIC_SEQ = t.TOPIC_SEQ
 					  AND tm.MEMBER_SEQ = #{memberSeq}
+				     AND tm.ROLE_TYPE = 'OWNER'    <!-- 안건 owner만 수정가능 -->
 					  AND tm.USE_YN = TRUE
 				)
 			</when>
@@ -159,7 +168,6 @@
 			  CATEGORY_SEQ /**/
 			, EMOJI
 			, TITLE /**/
-			, STATUS /**/
 			, GOOGLE_EVENT_ID /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
@@ -172,7 +180,6 @@
 			  #{categorySeq}
 			, #{emoji}
 			, #{title}
-			, #{status}
 			, #{googleEventId}
 			, TRUE
 			, #{registerSeq}
@@ -203,6 +210,36 @@
 			  #{topicSeq}
 			, COALESCE(#{memberSeq}, #{registerSeq})
 			, 'OWNER'
+			, NOW(3)
+			, TRUE
+			, #{registerSeq}
+			, #{registerIp}
+			, NOW(3)
+			, #{updaterSeq}
+			, #{updaterIp}
+			, NOW(3)
+		)
+	</insert>
+
+	<!-- 토픽 참여(본인) = TOPIC_MEMBER PARTICIPANT (중복 시 IGNORE) -->
+	<insert id="insertTopicParticipant" parameterType="frontTopicMemberJoinRequest">
+		/* com.matjzing.mapper.FrontTopicMapper.insertTopicParticipant */
+		INSERT IGNORE INTO TOPIC_MEMBER (
+			  TOPIC_SEQ /**/
+			, MEMBER_SEQ /**/
+			, ROLE_TYPE /**/
+			, JOIN_DT /**/
+			, USE_YN /**/
+			, REGISTER_SEQ /**/
+			, REGISTER_IP /**/
+			, REGISTRATION_DT /**/
+			, UPDATER_SEQ /**/
+			, UPDATER_IP /**/
+			, UPDATE_DT /**/
+		) VALUES (
+			  #{topicSeq}
+			, COALESCE(#{memberSeq}, #{registerSeq})
+			, 'PARTICIPANT'
 			, NOW(3)
 			, TRUE
 			, #{registerSeq}

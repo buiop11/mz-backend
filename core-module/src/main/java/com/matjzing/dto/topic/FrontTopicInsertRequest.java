@@ -36,9 +36,6 @@ public class FrontTopicInsertRequest extends BaseRequest {
 	private String title;
 
 	@Schema(description = "", example = "")
-	private String status;
-
-	@Schema(description = "", example = "")
 	private String googleEventId;
 
 	/*

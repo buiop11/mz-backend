@@ -162,6 +162,21 @@ public class FrontTopicService {
 		 */
 	}
 
+	/**
+	 * 토픽 참여(본인): 로그인 회원을 TOPIC_MEMBER(PARTICIPANT)로 추가합니다.
+	 * - 이미 참여 중이면 INSERT IGNORE로 무시됩니다.
+	 * - 미가입(= MEMBER_SEQ 없음) 상태에서는 참여 불가하므로, 가입/로그인 후 호출해야 합니다.
+	 */
+	@Transactional
+	public void join(FrontTopicMemberJoinRequest req) {
+		MapperUtil.setBaseRequest(req);
+		int exists = mapper.countActiveTopic(req.getTopicSeq());
+		if (exists <= 0) {
+			throw new NotfoundException();
+		}
+		mapper.insertTopicParticipant(req);
+	}
+
 	@Transactional
 	public void update(FrontTopicUpdateRequest req) {
 		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅

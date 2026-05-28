@@ -79,6 +79,18 @@ public class FrontTopicController {
 		return RestUtil.ok();
 	}
 
+	@PostMapping("/{topicSeq}/members/join")
+	@Operation(summary ="토픽 참여(본인)", description =
+		  "## Description ##\n"
+		+ "초대 링크 등으로 topicSeq를 받은 사용자가, 로그인 후 본인을 TOPIC_MEMBER(PARTICIPANT)로 참여시키는 API 입니다.\n"
+		+ "TOPIC_MEMBER는 MEMBER_SEQ가 필수이므로, 미가입 사용자는 먼저 회원가입/로그인으로 MEMBER_SEQ를 만든 뒤 호출해야 합니다.\n"
+	)
+	public ResponseEntity<ResponseModel<EmptyResponse>> join(@PathVariable("topicSeq") Long topicSeq, @Parameter(hidden = true) FrontTopicMemberJoinRequest req) {
+		req.setTopicSeq(topicSeq);
+		service.join(req);
+		return RestUtil.ok();
+	}
+
 	@PutMapping
 	@Operation(summary ="안건 수정", description =
 		  "## Description ##\n"

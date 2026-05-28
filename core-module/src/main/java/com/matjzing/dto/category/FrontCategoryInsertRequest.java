@@ -1,8 +1,10 @@
 package com.matjzing.dto.category;
 
 import com.matjzing.dto.common.*;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.matjzing.dto.file.FileUploadDto;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
@@ -20,19 +22,15 @@ import java.util.List;
 @Alias("frontCategoryInsertRequest")
 public class FrontCategoryInsertRequest extends BaseRequest {
 
-	@Schema(description = "파일 목록")
-    private List<FileUploadDto> fileList;
-
+	@Hidden
 	@Schema(description = "", example = "")
 	private Long categorySeq;
 
+	@NotNull
 	@Schema(description = "", example = "")
 	private String name;
 
 	@Schema(description = "", example = "")
-	private String iconUrl;
+	private String emoji;
 
-	/*
-		@NotNull(message = "필수값입니다.")
-	 */
 }

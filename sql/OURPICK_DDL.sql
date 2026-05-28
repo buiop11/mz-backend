@@ -157,7 +157,7 @@ CREATE TABLE `SECESSION_MEMBER` (
 CREATE TABLE `CATEGORY` (
   `CATEGORY_SEQ`     INT            NOT NULL AUTO_INCREMENT                 COMMENT '카테고리_시퀀스',
   `NAME`             VARCHAR(50)    NOT NULL                                COMMENT '카테고리명',
-  `ICON_URL`         VARCHAR(255)   NULL                                    COMMENT '아이콘_URL',
+  `EMOJI`            VARCHAR(20)    NULL                                    COMMENT '이모지',
   `USE_YN`           TINYINT(1)     NOT NULL DEFAULT 1                      COMMENT '사용_여부',
   `REGISTER_SEQ`     INT            NOT NULL                                COMMENT '등록자_시퀀스',
   `REGISTER_IP`      VARCHAR(50)    NULL                                    COMMENT '등록자_IP',

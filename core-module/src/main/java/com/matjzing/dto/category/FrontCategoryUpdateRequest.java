@@ -30,7 +30,7 @@ public class FrontCategoryUpdateRequest extends BaseRequest {
 	private String name;
 
 	@Schema(description = "", example = "")
-	private String iconUrl;
+	private String emoji;
 
 	/*
 		@NotNull(message = "필수값입니다.")

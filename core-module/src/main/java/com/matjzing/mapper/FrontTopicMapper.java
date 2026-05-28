@@ -22,6 +22,10 @@ public interface FrontTopicMapper {
 
 	int insertTopicMember(FrontTopicInsertRequest req);
 
+	int countActiveTopic(Long topicSeq);
+
+	int insertTopicParticipant(FrontTopicMemberJoinRequest req);
+
 	Long updateFrontTopic(FrontTopicUpdateRequest req);
 	Long deleteFrontTopic(FrontTopicDeleteRequest req);
 	

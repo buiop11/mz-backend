@@ -16,7 +16,7 @@
 		SELECT
 			  CATEGORY_SEQ /**/
 			, NAME /**/
-			, ICON_URL /**/
+			, EMOJI /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
 			, REGISTER_IP /**/
@@ -34,7 +34,7 @@
 		SELECT
 			  CATEGORY_SEQ /**/
 			, NAME /**/
-			, ICON_URL /**/
+			, EMOJI /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
 			, REGISTER_IP /**/
@@ -53,7 +53,7 @@
 		SELECT
 			  CATEGORY_SEQ /**/
 			, NAME /**/
-			, ICON_URL /**/
+			, EMOJI /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
 			, REGISTER_IP /**/
@@ -72,7 +72,7 @@
 		/* com.matjzing.mapper.FrontCategoryMapper.insertFrontCategory */
 		INSERT INTO CATEGORY (
 			  NAME /**/
-			, ICON_URL /**/
+			, EMOJI /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
 			, REGISTER_IP /**/
@@ -82,7 +82,7 @@
 			, UPDATE_DT /**/
 		) VALUES (
 			  #{name}
-			, #{iconUrl}
+			, #{emoji}
 			, TRUE
 			, #{registerSeq}
 			, #{registerIp}
@@ -101,7 +101,7 @@
 			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
 			, UPDATE_DT = NOW(3) /*수정_일시*/
 			, NAME = #{name} /**/
-			, ICON_URL = #{iconUrl} /**/
+			, EMOJI = #{emoji} /**/
 		WHERE
 			CATEGORY_SEQ = #{categorySeq}
 	</update>

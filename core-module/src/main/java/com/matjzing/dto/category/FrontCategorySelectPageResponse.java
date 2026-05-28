@@ -24,6 +24,6 @@ public class FrontCategorySelectPageResponse {
 	private String name;
 
 	@Schema(description = "", example = "")
-	private String iconUrl;
+	private String emoji;
 
 }
