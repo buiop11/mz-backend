@@ -63,7 +63,8 @@ public class FrontTopicController {
 		+ "안건 상세 API 입니다\n"
 		+ "TOPIC_MEMBER에 포함된 회원만 조회할 수 있습니다.\n"
 	)
-	public ResponseEntity<ResponseModel<FrontTopicSelectResponse>> detail(@PathVariable("topicSeq") Long topicSeq, @Parameter(hidden = true) FrontTopicSelectRequest req) {
+	public ResponseEntity<ResponseModel<FrontTopicSelectResponse>> detail(
+			@PathVariable("topicSeq") Long topicSeq, @Parameter(hidden = true) FrontTopicSelectRequest req) {
 		req.setTopicSeq(topicSeq);
 		return RestUtil.ok(service.detail(req));
 	}

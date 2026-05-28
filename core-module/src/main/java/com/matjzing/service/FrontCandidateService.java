@@ -184,4 +184,13 @@ public class FrontCandidateService {
 		mapper.deleteFrontCandidate(req); // 수정처리
 	}
 
+	@Transactional
+	public void pick(FrontCandidatePickRequest req) {
+		MapperUtil.setBaseRequest(req);
+		Long affected = mapper.pickTopicByCandidateSeq(req);
+		if (affected == null || affected.longValue() == 0L) {
+			throw new NotfoundException();
+		}
+	}
+
 }

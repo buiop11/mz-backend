@@ -175,4 +175,33 @@
 			CANDIDATE_SEQ = #{candidateSeq}
 	</update>
 
+	<!-- 후보 PICK: TOPIC.STATUS='PICK', TOPIC.CANDIDATE_SEQ=candidateSeq (OWNER만) -->
+	<update id="pickTopicByCandidateSeq" parameterType="frontCandidatePickRequest">
+		/* com.matjzing.mapper.FrontCandidateMapper.pickTopicByCandidateSeq */
+		UPDATE TOPIC t
+		JOIN CANDIDATE c ON c.TOPIC_SEQ = t.TOPIC_SEQ
+		SET
+			  t.UPDATER_SEQ = #{updaterSeq}
+			, t.UPDATER_IP = #{updaterIp}
+			, t.UPDATE_DT = NOW(3)
+			, t.STATUS = 'PICK'
+			, t.CANDIDATE_SEQ = c.CANDIDATE_SEQ
+			, c.UPDATER_SEQ = #{updaterSeq}
+			, c.UPDATER_IP = #{updaterIp}
+			, c.UPDATE_DT = NOW(3)
+			, c.IS_FIXED = TRUE
+		WHERE
+			c.CANDIDATE_SEQ = #{candidateSeq}
+			AND c.USE_YN = TRUE
+			AND t.USE_YN = TRUE
+			AND EXISTS (
+				SELECT 1
+				FROM TOPIC_MEMBER tm
+				WHERE tm.TOPIC_SEQ = t.TOPIC_SEQ
+				  AND tm.MEMBER_SEQ = #{memberSeq}
+<!--				  AND tm.ROLE_TYPE = 'OWNER'-->
+				  AND tm.USE_YN = TRUE
+			)
+	</update>
+
 </mapper>

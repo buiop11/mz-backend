@@ -22,5 +22,7 @@ public interface FrontCandidateMapper {
 	Long insertFrontCandidate(FrontCandidateInsertRequest req);
 	Long updateFrontCandidate(FrontCandidateUpdateRequest req);
 	Long deleteFrontCandidate(FrontCandidateDeleteRequest req);
+
+	Long pickTopicByCandidateSeq(FrontCandidatePickRequest req);
 	
 }

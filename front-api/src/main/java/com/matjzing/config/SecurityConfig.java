@@ -37,7 +37,6 @@ public class SecurityConfig {
 			, "/swagger-ui.html"
 			, "/v3/api-docs/swagger-config"
 
-			/*
 			,"/api/vote"		// front 임시 이하 아래
 			,"/api/vote/**"
 			,"/api/topic"
@@ -52,7 +51,6 @@ public class SecurityConfig {
 			,"/api/candidate/**"
 			,"/api/comment"
 			,"/api/comment/**"
-			*/
 	};
 
 	@Bean

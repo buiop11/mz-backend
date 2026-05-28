@@ -105,4 +105,18 @@ public class FrontCandidateController {
 		return RestUtil.ok();
 	}
 
+	@PostMapping("/{candidateSeq}/pick")
+	@Operation(summary ="후보 PICK", description =
+		  "## Description ##\n"
+		+ "후보를 PICK으로 확정합니다.\n"
+		+ "- TOPIC.STATUS = 'PICK'\n"
+		+ "- TOPIC.CANDIDATE_SEQ = candidateSeq\n"
+		+ "권한: 해당 TOPIC의 OWNER만 가능 (TOPIC_MEMBER ROLE_TYPE=OWNER)\n"
+	)
+	public ResponseEntity<ResponseModel<EmptyResponse>> pick(@PathVariable("candidateSeq") Long candidateSeq, @Parameter(hidden = true) FrontCandidatePickRequest req) {
+		req.setCandidateSeq(candidateSeq);
+		service.pick(req);
+		return RestUtil.ok();
+	}
+
 }
