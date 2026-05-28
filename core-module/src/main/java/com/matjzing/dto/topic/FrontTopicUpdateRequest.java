@@ -20,17 +20,8 @@ import java.util.List;
 @Alias("frontTopicUpdateRequest")
 public class FrontTopicUpdateRequest extends BaseRequest {
 
-	@Schema(description = "파일 목록")
-	private List<FileUploadDto> fileList;
-
-	@Schema(description = "", example = "")
+	@Schema(description = "안건 seq", example = "1")
 	private Long topicSeq;
-
-	@Schema(description = "", example = "")
-	private Long categorySeq;
-
-	@Schema(description = "선정 후보 시퀀스", example = "")
-	private Long candidateSeq;
 
 	@Schema(description = "", example = "")
 	private String emoji;
@@ -39,13 +30,7 @@ public class FrontTopicUpdateRequest extends BaseRequest {
 	private String title;
 
 	@Schema(description = "", example = "")
-	private String status;
-
-	@Schema(description = "", example = "")
 	private String googleEventId;
 
-	/*
-		@NotNull(message = "필수값입니다.")
-	 */
 }
 

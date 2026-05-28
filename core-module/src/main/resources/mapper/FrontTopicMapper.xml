@@ -258,11 +258,8 @@
 			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
 			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
 			, UPDATE_DT = NOW(3) /*수정_일시*/
-			, CATEGORY_SEQ = #{categorySeq} /**/
-			, CANDIDATE_SEQ = #{candidateSeq} /**/
 			, EMOJI = #{emoji} /**/
 			, TITLE = #{title} /**/
-			, STATUS = #{status} /**/
 			, GOOGLE_EVENT_ID = #{googleEventId} /**/
 		WHERE
 			TOPIC_SEQ = #{topicSeq}
