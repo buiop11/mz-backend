@@ -53,7 +53,7 @@ public class CommonFileController {
 		  "## Description ##\n"
 		+ "단건 파일 업로드 API 입니다\n"
 	)
-	@PostMapping(value="/upload", produces = "application/json; charset=utf8")
+	@PostMapping(value="/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = "application/json; charset=utf8")
 	public ResponseEntity<ResponseModel<FileUploadResponse>> fileUploads(@RequestParam("file") MultipartFile file) throws Exception {
 		FileUploadResponse fileUploadResponse = commonFileService.saveTemp(file);
 		if (null != fileUploadResponse) {

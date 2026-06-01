@@ -375,61 +375,61 @@ public class CommonFileService {
         return listFileResponse;
     }
 
-    /**
-     * 웹에디터 S3 파일 업로드 단건
-     * @param file
-     * @return
-     */
-    public FileUploadResponse uploadS3WebEditor(FileUploadResponse file) throws Exception {
-        ArrayList<FileUploadResponse> files = new ArrayList<FileUploadResponse>();
-        files.add(file);
-
-        List<FileUploadResponse> listFileResponse = this.uploadS3WebEditor(files);
-
-        if(!listFileResponse.isEmpty()){
-            return listFileResponse.get(0);
-        }
-        return null;
-    }
-
-    /**
-     * 웹에디터 S3 파일 업로드 Multi
-     * @param files
-     * @return
-     */
-    public List<FileUploadResponse> uploadS3WebEditor(List<FileUploadResponse> files) throws Exception {
-        List<FileUploadResponse> listFileResponse = new ArrayList<>();
-        if(!files.isEmpty()){
-            for (FileUploadResponse file : files) {
-
-                FileInsertRequest insertRequest = new FileInsertRequest();
-                insertRequest.setFilePath(file.getFilePath());
-                insertRequest.setTargetCd(FileTargetCd.webeditor_temp);
-                insertRequest.setOpenFileYn(true);
-
-                if ("local".equals(profile)) {
-                    // Local 파일 이동 public/private
-                    moveFile(insertRequest);
-                } else {
-                    s3FileSyncUtil.syncFile(file, S3FileSyncUtil.S3FileSyncTypeCd.EC2_TO_S3_TMP);
-
-                    // S3 File Move(temp to public/private)
-                    moveS3TempBucketToS3Bucket(insertRequest);
-                }
-                log.debug("file = {}", file);
-                log.debug("insertRequest = {}", insertRequest);
-
-                FileUploadResponse fileUploadResponse = new FileUploadResponse();
-                fileUploadResponse.setFileOriginalName(file.getFileOriginalName());
-                fileUploadResponse.setFileSize(file.getFileSize());
-                fileUploadResponse.setFilePath(publicUrl+insertRequest.getFilePath());
-                fileUploadResponse.setFileExtensionName(file.getFileExtensionName());
-
-                log.debug("insertRequest = {}", fileUploadResponse);
-                listFileResponse.add(fileUploadResponse);
-            }
-        }
-        return listFileResponse;
-    }
+//    /**
+//     * 웹에디터 S3 파일 업로드 단건
+//     * @param file
+//     * @return
+//     */
+//    public FileUploadResponse uploadS3WebEditor(FileUploadResponse file) throws Exception {
+//        ArrayList<FileUploadResponse> files = new ArrayList<FileUploadResponse>();
+//        files.add(file);
+//
+//        List<FileUploadResponse> listFileResponse = this.uploadS3WebEditor(files);
+//
+//        if(!listFileResponse.isEmpty()){
+//            return listFileResponse.get(0);
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * 웹에디터 S3 파일 업로드 Multi
+//     * @param files
+//     * @return
+//     */
+//    public List<FileUploadResponse> uploadS3WebEditor(List<FileUploadResponse> files) throws Exception {
+//        List<FileUploadResponse> listFileResponse = new ArrayList<>();
+//        if(!files.isEmpty()){
+//            for (FileUploadResponse file : files) {
+//
+//                FileInsertRequest insertRequest = new FileInsertRequest();
+//                insertRequest.setFilePath(file.getFilePath());
+//                insertRequest.setTargetCd(FileTargetCd.webeditor_temp);
+//                insertRequest.setOpenFileYn(true);
+//
+//                if ("local".equals(profile)) {
+//                    // Local 파일 이동 public/private
+//                    moveFile(insertRequest);
+//                } else {
+//                    s3FileSyncUtil.syncFile(file, S3FileSyncUtil.S3FileSyncTypeCd.EC2_TO_S3_TMP);
+//
+//                    // S3 File Move(temp to public/private)
+//                    moveS3TempBucketToS3Bucket(insertRequest);
+//                }
+//                log.debug("file = {}", file);
+//                log.debug("insertRequest = {}", insertRequest);
+//
+//                FileUploadResponse fileUploadResponse = new FileUploadResponse();
+//                fileUploadResponse.setFileOriginalName(file.getFileOriginalName());
+//                fileUploadResponse.setFileSize(file.getFileSize());
+//                fileUploadResponse.setFilePath(publicUrl+insertRequest.getFilePath());
+//                fileUploadResponse.setFileExtensionName(file.getFileExtensionName());
+//
+//                log.debug("insertRequest = {}", fileUploadResponse);
+//                listFileResponse.add(fileUploadResponse);
+//            }
+//        }
+//        return listFileResponse;
+//    }
 
 }

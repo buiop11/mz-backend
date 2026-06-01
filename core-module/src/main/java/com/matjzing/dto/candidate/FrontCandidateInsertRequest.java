@@ -6,6 +6,7 @@ import com.matjzing.dto.file.FileUploadDto;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -46,6 +47,9 @@ public class FrontCandidateInsertRequest extends BaseRequest {
 
 	@Schema(description = "", example = "")
 	private boolean isFixed;
+
+	@Schema(description = "일자", example = "")
+	private LocalDateTime pickDate;
 
 	/*
 		@NotNull(message = "필수값입니다.")

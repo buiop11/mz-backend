@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
+import java.time.LocalDateTime;
+
 
 /**
  * @author: 김아진
@@ -43,5 +45,8 @@ public class FrontCandidateSelectListResponse {
 
 	@Schema(description = "", example = "")
 	private boolean isFixed;
+
+	@Schema(description = "일자", example = "")
+	private LocalDateTime pickDate;
 
 }

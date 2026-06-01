@@ -18,8 +18,9 @@
 			, TOPIC_SEQ /**/
 			, MEMBER_SEQ /**/
 			, NAME /**/
-			, INFO /**/
 			, PRICE /**/
+			, PICK_DATE /**/
+			, INFO /**/
 			, IMAGE_URL /**/
 			, LINK_URL /**/
 			, IS_FIXED /**/
@@ -46,8 +47,9 @@
 			, TOPIC_SEQ /**/
 			, MEMBER_SEQ /**/
 			, NAME /**/
-			, INFO /**/
 			, PRICE /**/
+			, PICK_DATE /**/
+			, INFO /**/
 			, IMAGE_URL /**/
 			, LINK_URL /**/
 			, IS_FIXED /**/
@@ -88,8 +90,9 @@
 			, TOPIC_SEQ /**/
 			, MEMBER_SEQ /**/
 			, NAME /**/
-			, INFO /**/
 			, PRICE /**/
+			, PICK_DATE /**/
+			, INFO /**/
 			, IMAGE_URL /**/
 			, LINK_URL /**/
 			, IS_FIXED /**/
@@ -113,8 +116,9 @@
 			  TOPIC_SEQ /**/
 			, MEMBER_SEQ /**/
 			, NAME /**/
-			, INFO /**/
 			, PRICE /**/
+			, PICK_DATE /**/
+			, INFO /**/
 			, IMAGE_URL /**/
 			, LINK_URL /**/
 			, IS_FIXED /**/
@@ -129,8 +133,9 @@
 			  #{topicSeq}
 			, COALESCE(#{memberSeq}, #{registerSeq})
 			, #{name}
-			, #{info}
 			, #{price}
+			, #{pickDate}
+			, #{info}
 			, #{imageUrl}
 			, #{linkUrl}
 			, #{isFixed}
@@ -154,8 +159,9 @@
 			, TOPIC_SEQ = #{topicSeq} /**/
 			, MEMBER_SEQ = COALESCE(#{memberSeq}, MEMBER_SEQ) /**/
 			, NAME = #{name} /**/
-			, INFO = #{info} /**/
 			, PRICE = #{price} /**/
+			, PICK_DATE = #{pickDate} /**/
+			, INFO = #{info} /**/
 			, IMAGE_URL = #{imageUrl} /**/
 			, LINK_URL = #{linkUrl} /**/
 			, IS_FIXED = #{isFixed} /**/

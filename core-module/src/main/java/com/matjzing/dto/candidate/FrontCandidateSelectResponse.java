@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -37,8 +38,11 @@ public class FrontCandidateSelectResponse {
 	@Schema(description = "", example = "")
 	private String info;
 
-	@Schema(description = "", example = "")
+	@Schema(description = "금액", example = "")
 	private Integer price;
+
+	@Schema(description = "일자", example = "")
+	private LocalDateTime pickDate;
 
 	@Schema(description = "", example = "")
 	private String imageUrl;

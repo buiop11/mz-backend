@@ -217,6 +217,7 @@ CREATE TABLE `CANDIDATE` (
   `MEMBER_SEQ`        INT            NULL                                    COMMENT '회원_시퀀스',
   `NAME`              VARCHAR(200)   NOT NULL                                COMMENT '후보명',
   `PRICE`             INT            NOT NULL DEFAULT 0                      COMMENT '가격',
+  `PICK_DATE`         DATETIME(3)    NULL                                    COMMENT '일자',
   `INFO`              VARCHAR(500)   NULL                                    COMMENT '후보_정보',
   `IMAGE_URL`         VARCHAR(555)   NULL                                    COMMENT '이미지_URL',
   `LINK_URL`          TEXT           NULL                                    COMMENT '링크_URL',
