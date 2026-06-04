@@ -19,4 +19,7 @@ public class FrontTopicSelectListRequest extends PageRequest {
 
     @Schema(description = "카테고리 시퀀스", example = "1")
     private Long categorySeq;
+
+    @Schema(description = "true: PICK 상태만, false: VOTING 상태만, 미입력 시 전체", example = "false")
+    private Boolean picked;
 }

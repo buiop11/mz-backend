@@ -42,6 +42,7 @@ public class FrontTopicController {
 		  "## Description ##\n"
 		+ "안건 List 조회 API 입니다\n"
 		+ "로그인 회원이 TOPIC_MEMBER(OWNER 또는 PARTICIPANT)로 포함된 안건만 조회됩니다.\n"
+		+ "`picked`: true=PICK, false=VOTING, 미입력=전체. 응답 `picked`/`status`로 상태 확인.\n"
 	)
 	public ResponseEntity<ResponseModel<List<FrontTopicSelectListResponse>>> list(FrontTopicSelectListRequest req) {
 		return RestUtil.ok(service.list(req));
@@ -52,6 +53,7 @@ public class FrontTopicController {
 		  "## Description ##\n"
 		+ "안건 Page 조회 API 입니다\n"
 		+ "로그인 회원이 TOPIC_MEMBER로 포함된 안건만 조회됩니다.\n"
+		+ "`picked`: true=PICK, false=VOTING, 미입력=전체. 응답 `picked`/`status`로 상태 확인.\n"
 	)
 	public ResponseEntity<ResponseModel<EPageInfo<FrontTopicSelectPageResponse>>> page(FrontTopicSelectPageRequest req) {
 		return RestUtil.ok(service.page(req));

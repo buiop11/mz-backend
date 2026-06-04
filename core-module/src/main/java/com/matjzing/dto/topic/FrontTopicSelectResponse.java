@@ -43,8 +43,11 @@ public class FrontTopicSelectResponse {
 	@Schema(description = "", example = "")
 	private String title;
 
-	@Schema(description = "", example = "")
+	@Schema(description = "상태 (VOTING | PICK)", example = "VOTING")
 	private String status;
+
+	@Schema(description = "PICK 확정 여부 (STATUS='PICK')", example = "false")
+	private Boolean picked;
 
 	@Schema(description = "", example = "")
 	private String googleEventId;

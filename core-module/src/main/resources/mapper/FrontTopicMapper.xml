@@ -44,6 +44,7 @@
 			, t.EMOJI
 			, t.TITLE /**/
 			, t.STATUS /**/
+			, (t.STATUS = 'PICK') AS picked
 			, t.GOOGLE_EVENT_ID /**/
 			, t.USE_YN /**/
 			, t.REGISTER_SEQ /**/
@@ -73,6 +74,16 @@
 		<if test="categorySeq != null">
 			AND t.CATEGORY_SEQ = #{categorySeq}
 		</if>
+		<if test="picked != null">
+			<choose>
+				<when test="picked">
+					AND t.STATUS = 'PICK'
+				</when>
+				<otherwise>
+					AND t.STATUS = 'VOTING'
+				</otherwise>
+			</choose>
+		</if>
 	</select>
 
 	<!-- 안건 Page 조회 -->
@@ -87,6 +98,7 @@
 			, t.EMOJI
 			, t.TITLE /**/
 			, t.STATUS /**/
+			, (t.STATUS = 'PICK') AS picked
 			, t.GOOGLE_EVENT_ID /**/
 			, t.USE_YN /**/
 			, t.REGISTER_SEQ /**/
@@ -115,6 +127,16 @@
 		</choose>
 		<if test="categorySeq != null">
 			AND t.CATEGORY_SEQ = #{categorySeq}
+		</if>
+		<if test="picked != null">
+			<choose>
+				<when test="picked">
+					AND t.STATUS = 'PICK'
+				</when>
+				<otherwise>
+					AND t.STATUS = 'VOTING'
+				</otherwise>
+			</choose>
 		</if>
 	</select>
 
@@ -131,6 +153,7 @@
 			, t.EMOJI
 			, t.TITLE /**/
 			, t.STATUS /**/
+			, (t.STATUS = 'PICK') AS picked
 			, t.GOOGLE_EVENT_ID /**/
 			, t.USE_YN /**/
 			, t.REGISTER_SEQ /**/
