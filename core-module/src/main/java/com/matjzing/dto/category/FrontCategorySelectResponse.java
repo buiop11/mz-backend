@@ -25,6 +25,12 @@ public class FrontCategorySelectResponse {
 	@Schema(description = "", example = "")
 	private Long categorySeq;
 
+	@Schema(description = "회원 시퀀스 (0=공통 기본 카테고리)", example = "0")
+	private Long memberSeq;
+
+	@Schema(description = "공통 기본 카테고리 여부 (MEMBER_SEQ=0)", example = "true")
+	private Boolean defaultCategory;
+
 	@Schema(description = "", example = "")
 	private String name;
 

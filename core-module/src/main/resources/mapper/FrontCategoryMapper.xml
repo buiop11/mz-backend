@@ -3,75 +3,83 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--
- * author: 김아진
- * date: 2026-05-11
- * pname: 관리자
- * desc: 관리자 매퍼 XML 작성
+ * 카테고리: MEMBER_SEQ=0 공통(기본), 그 외 개인 카테고리
+ * 조회: MEMBER_SEQ IN (0, #{memberSeq}) — 2값 IN, 인덱스 (MEMBER_SEQ, USE_YN) 권장
  -->
 <mapper namespace="com.matjzing.mapper.FrontCategoryMapper">
-	
+
+	<!-- 기본(0) + 로그인 회원 카테고리. 미로그인 시 기본만 -->
+	<sql id="categoryMemberScopeWhere">
+		AND USE_YN = TRUE
+		<choose>
+			<when test="memberSeq != null and memberSeq != 0">
+				AND MEMBER_SEQ IN (0, #{memberSeq})
+			</when>
+			<otherwise>
+				AND MEMBER_SEQ = 0
+			</otherwise>
+		</choose>
+	</sql>
+
+	<sql id="categorySelectColumns">
+		  CATEGORY_SEQ /**/
+		, MEMBER_SEQ /**/
+		, (MEMBER_SEQ = 0) AS defaultCategory
+		, NAME /**/
+		, EMOJI /**/
+		, USE_YN /**/
+		, REGISTER_SEQ /**/
+		, REGISTER_IP /**/
+		, REGISTRATION_DT /**/
+		, UPDATER_SEQ /**/
+		, UPDATER_IP /**/
+		, UPDATE_DT /**/
+	</sql>
+
 	<!-- 카테고리 List 조회 -->
 	<select id="selectFrontCategoryList" parameterType="frontCategorySelectListRequest" resultType="frontCategorySelectListResponse">
         /* com.matjzing.mapper.FrontCategoryMapper.selectFrontCategoryList */
 		SELECT
-			  CATEGORY_SEQ /**/
-			, NAME /**/
-			, EMOJI /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			<include refid="categorySelectColumns"/>
 		FROM
 			CATEGORY
+		WHERE
+			1 = 1
+		<include refid="categoryMemberScopeWhere"/>
+		ORDER BY MEMBER_SEQ ASC, CATEGORY_SEQ ASC
 	</select>
 
 	<!-- 카테고리 Page 조회 -->
 	<select id="selectFrontCategoryPage" parameterType="frontCategorySelectPageRequest" resultType="frontCategorySelectPageResponse">
 		/* com.matjzing.mapper.FrontCategoryMapper.selectFrontCategoryPage */
 		SELECT
-			  CATEGORY_SEQ /**/
-			, NAME /**/
-			, EMOJI /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			<include refid="categorySelectColumns"/>
 		FROM
 			CATEGORY
+		WHERE
+			1 = 1
+		<include refid="categoryMemberScopeWhere"/>
+		ORDER BY MEMBER_SEQ ASC, CATEGORY_SEQ ASC
 	</select>
-
 
 	<!-- 카테고리 상세 조회 -->
 	<select id="selectFrontCategory" parameterType="frontCategorySelectRequest" resultType="frontCategorySelectResponse">
 		/* com.matjzing.mapper.FrontCategoryMapper.selectFrontCategory */
 		SELECT
-			  CATEGORY_SEQ /**/
-			, NAME /**/
-			, EMOJI /**/
-			, USE_YN /**/
-			, REGISTER_SEQ /**/
-			, REGISTER_IP /**/
-			, REGISTRATION_DT /**/
-			, UPDATER_SEQ /**/
-			, UPDATER_IP /**/
-			, UPDATE_DT /**/
+			<include refid="categorySelectColumns"/>
 		FROM
 			CATEGORY
 		WHERE
 			CATEGORY_SEQ = #{categorySeq}
+		<include refid="categoryMemberScopeWhere"/>
 	</select>
 
-	<!-- 카테고리 등록 -->
+	<!-- 카테고리 등록 (개인 카테고리: MEMBER_SEQ = 로그인 회원, 0 불가) -->
 	<insert id="insertFrontCategory" parameterType="frontCategoryInsertRequest" useGeneratedKeys="true" keyProperty="categorySeq">
 		/* com.matjzing.mapper.FrontCategoryMapper.insertFrontCategory */
 		INSERT INTO CATEGORY (
-			  NAME /**/
+			  MEMBER_SEQ /**/
+			, NAME /**/
 			, EMOJI /**/
 			, USE_YN /**/
 			, REGISTER_SEQ /**/
@@ -81,7 +89,8 @@
 			, UPDATER_IP /**/
 			, UPDATE_DT /**/
 		) VALUES (
-			  #{name}
+			  COALESCE(NULLIF(#{memberSeq}, 0), #{registerSeq})
+			, #{name}
 			, #{emoji}
 			, TRUE
 			, #{registerSeq}
@@ -93,29 +102,35 @@
 		)
 	</insert>
 
-	<!-- 카테고리 수정 -->
+	<!-- 카테고리 수정 (본인 카테고리만, 기본 MEMBER_SEQ=0 제외) -->
     <update id="updateFrontCategory" parameterType="frontCategoryUpdateRequest">
 		/* com.matjzing.mapper.FrontCategoryMapper.updateFrontCategory */
     	UPDATE CATEGORY SET
-			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
-			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
-			, UPDATE_DT = NOW(3) /*수정_일시*/
-			, NAME = #{name} /**/
-			, EMOJI = #{emoji} /**/
+			  UPDATER_SEQ = #{updaterSeq}
+			, UPDATER_IP = #{updaterIp}
+			, UPDATE_DT = NOW(3)
+			, NAME = #{name}
+			, EMOJI = #{emoji}
 		WHERE
 			CATEGORY_SEQ = #{categorySeq}
+			AND MEMBER_SEQ = COALESCE(NULLIF(#{memberSeq}, 0), #{registerSeq})
+			AND MEMBER_SEQ != 0
+			AND USE_YN = TRUE
 	</update>
 
-	<!-- 카테고리 삭제 -->
+	<!-- 카테고리 삭제 (본인 카테고리만) -->
     <update id="deleteFrontCategory" parameterType="frontCategoryDeleteRequest">
 		/* com.matjzing.mapper.FrontCategoryMapper.deleteFrontCategory */
     	UPDATE CATEGORY SET
-			  UPDATER_SEQ = #{updaterSeq} /*수정자_시퀀스*/
-			, UPDATER_IP = #{updaterIp} /*수정자_아이피*/
-			, UPDATE_DT = NOW(3) /*수정_일시*/
+			  UPDATER_SEQ = #{updaterSeq}
+			, UPDATER_IP = #{updaterIp}
+			, UPDATE_DT = NOW(3)
 			, USE_YN = FALSE
 		WHERE
 			CATEGORY_SEQ = #{categorySeq}
+			AND MEMBER_SEQ = COALESCE(NULLIF(#{memberSeq}, 0), #{registerSeq})
+			AND MEMBER_SEQ != 0
+			AND USE_YN = TRUE
 	</update>
 
 </mapper>

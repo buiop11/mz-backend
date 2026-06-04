@@ -156,6 +156,7 @@ CREATE TABLE `SECESSION_MEMBER` (
 -- ============================================
 CREATE TABLE `CATEGORY` (
   `CATEGORY_SEQ`     INT            NOT NULL AUTO_INCREMENT                 COMMENT '카테고리_시퀀스',
+  `MEMBER_SEQ`      INT            NOT NULL                                COMMENT '회원_시퀀스',
   `NAME`             VARCHAR(50)    NOT NULL                                COMMENT '카테고리명',
   `EMOJI`            VARCHAR(20)    NULL                                    COMMENT '이모지',
   `USE_YN`           TINYINT(1)     NOT NULL DEFAULT 1                      COMMENT '사용_여부',
@@ -165,7 +166,8 @@ CREATE TABLE `CATEGORY` (
   `UPDATER_SEQ`      INT            NOT NULL                                COMMENT '수정자_시퀀스',
   `UPDATER_IP`       VARCHAR(50)    NULL                                    COMMENT '수정자_IP',
   `UPDATE_DT`        DATETIME(3)    NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '수정_일시',
-  PRIMARY KEY (`CATEGORY_SEQ`)
+  PRIMARY KEY (`CATEGORY_SEQ`),
+  KEY `IDX_CATEGORY_MEMBER_USE` (`MEMBER_SEQ`, `USE_YN`)
 ) COMMENT='카테고리';
 
 -- ============================================

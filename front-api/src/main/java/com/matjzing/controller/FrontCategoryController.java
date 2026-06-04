@@ -18,11 +18,6 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * public static final String TAG_CATEGORY_01 = "02.카테고리"; // 번호는 채번 룰에따라
- * new Tag(TAG_CATEGORY_01, "카테고리 API 입니다.")
- */
-
-/**
  * @author: 김아진
  * @date: 2026-05-11
  * @pname: 관리자
@@ -41,6 +36,7 @@ public class FrontCategoryController {
 	@Operation(summary ="카테고리 List 조회", description =
 		  "## Description ##\n"
 		+ "카테고리 List 조회 API 입니다\n"
+		+ "공통 기본(MEMBER_SEQ=0) + 로그인 회원 개인 카테고리를 함께 조회합니다.\n"
 	)
 	public ResponseEntity<ResponseModel<List<FrontCategorySelectListResponse>>> list(FrontCategorySelectListRequest req) {
 		return RestUtil.ok(service.list(req));
@@ -50,10 +46,7 @@ public class FrontCategoryController {
 	@Operation(summary ="카테고리 Page 조회", description =
 		  "## Description ##\n"
 		+ "카테고리 Page 조회 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CATEGORY_002 | 카테고리 Page 조회 실패\n"
+		+ "공통 기본(MEMBER_SEQ=0) + 로그인 회원 개인 카테고리를 함께 조회합니다.\n"
 	)
 	public ResponseEntity<ResponseModel<EPageInfo<FrontCategorySelectPageResponse>>> page(FrontCategorySelectPageRequest req) {
 		return RestUtil.ok(service.page(req));
@@ -63,10 +56,6 @@ public class FrontCategoryController {
 	@Operation(summary ="카테고리 상세 조회", description =
 		  "## Description ##\n"
 		+ "카테고리 상세 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CATEGORY_003 | 카테고리 상세 조회 실패\n"
 	)
 	public ResponseEntity<ResponseModel<FrontCategorySelectResponse>> detail(@PathVariable("categorySeq") Long categorySeq, @Parameter(hidden = true) FrontCategorySelectRequest req) {
 		req.setCategorySeq(categorySeq);
@@ -76,11 +65,7 @@ public class FrontCategoryController {
 	@PostMapping
 	@Operation(summary ="카테고리 등록", description =
 		  "## Description ##\n"
-		+ "카테고리 등록 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CATEGORY_004 | 카테고리 등록 실패\n"
+		+ "카테고리 등록 API 입니다 (개인 카테고리, MEMBER_SEQ=로그인 회원)\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> insert(@Valid @RequestBody FrontCategoryInsertRequest req) {
 		service.insert(req);
@@ -90,11 +75,7 @@ public class FrontCategoryController {
 	@PutMapping
 	@Operation(summary ="카테고리 수정", description =
 		  "## Description ##\n"
-		+ "카테고리 수정 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CATEGORY_005 | 카테고리 수정 실패\n"
+		+ "카테고리 수정 API 입니다 (본인 개인 카테고리만, 기본 MEMBER_SEQ=0 불가)\n"
 	)
 	public ResponseEntity<ResponseModel<EmptyResponse>> update(@Valid @RequestBody FrontCategoryUpdateRequest req) {
 		service.update(req);
@@ -104,14 +85,18 @@ public class FrontCategoryController {
 	@DeleteMapping("/{categorySeq}")
 	@Operation(summary ="카테고리 삭제", description =
 		  "## Description ##\n"
-		+ "카테고리 삭제 API 입니다\n"
-//		+ "## 에러코드 ##\n"
-//		+ "코드|설명\n"
-//		+ "-|-\n"
-//		+ "ERR_CATEGORY_006 | 카테고리 삭제 실패\n"
+		+ "카테고리 삭제 API 입니다 (본인 개인 카테고리만, MEMBER_SEQ=0 기본 카테고리 불가)\n"
+		+ "로그인 JWT가 있으면 memberSeq 생략 가능합니다.\n"
 	)
-	public ResponseEntity<ResponseModel<EmptyResponse>> delete(@PathVariable("categorySeq") Long categorySeq, @Parameter(hidden = true) FrontCategoryDeleteRequest req) {
+	public ResponseEntity<ResponseModel<EmptyResponse>> delete(
+			@PathVariable("categorySeq") Long categorySeq,
+			@Parameter(description = "로그인 회원 MEMBER_SEQ (access JWT에 회원 정보가 있으면 생략 가능)")
+			@RequestParam(required = false) Long memberSeq,
+			@Parameter(hidden = true) @ModelAttribute FrontCategoryDeleteRequest req) {
 		req.setCategorySeq(categorySeq);
+		if (memberSeq != null) {
+			req.setMemberSeq(memberSeq);
+		}
 		service.delete(req);
 		return RestUtil.ok();
 	}

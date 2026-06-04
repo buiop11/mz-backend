@@ -41,10 +41,12 @@ public class FrontCategoryService {
 	private final CommonFileService commonFileService;
 
 	public List<FrontCategorySelectListResponse> list(FrontCategorySelectListRequest req) {
+		MapperUtil.bindMemberSeqFromLogin(req);
 		return mapper.selectFrontCategoryList(req);
 	}
 
 	public EPageInfo<FrontCategorySelectPageResponse> page(FrontCategorySelectPageRequest req) {
+		MapperUtil.bindMemberSeqFromLogin(req);
 		PageHelper.startPage(req.getCurrentPage(), 10);
 		/*
 		 	// 기간검색 1개 일 경우
@@ -116,7 +118,7 @@ public class FrontCategoryService {
 	}
 
 	public FrontCategorySelectResponse detail(FrontCategorySelectRequest req) {
-
+		MapperUtil.bindMemberSeqFromLogin(req);
 		FrontCategorySelectResponse response = mapper.selectFrontCategory(req);
 
 		// 게시판 상세페이지 일 경우 no-data 케이스 용
@@ -160,22 +162,22 @@ public class FrontCategoryService {
 
 	@Transactional
 	public void update(FrontCategoryUpdateRequest req) {
-		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅
-
-		/*
-			// 파일 업로드가 있는 경우
-			Long frontCategorySeq = req.getFrontCategorySeq();
-			List<FileUploadDto> fileList = req.getFileList();
-			commonFileService.insertFileList(true, FileTargetCd.bbs, fileList.toArray(new FileUploadDto[fileList.size()-1]) , frontCategorySeq, Integer.class);
-		 */
-
-		mapper.updateFrontCategory(req); // 수정처리
+		MapperUtil.bindMemberSeqFromLogin(req);
+		MapperUtil.setBaseRequest(req);
+		Long affected = mapper.updateFrontCategory(req);
+		if (affected == null || affected.longValue() == 0L) {
+			throw new NotfoundException();
+		}
 	}
 
 	@Transactional
 	public void delete(FrontCategoryDeleteRequest req) {
-		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅
-		mapper.deleteFrontCategory(req); // 수정처리
+		MapperUtil.bindMemberSeqFromLogin(req);
+		MapperUtil.setBaseRequest(req);
+		Long affected = mapper.deleteFrontCategory(req);
+		if (affected == null || affected.longValue() == 0L) {
+			throw new NotfoundException();
+		}
 	}
 
 }

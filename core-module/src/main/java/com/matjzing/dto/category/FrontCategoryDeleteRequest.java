@@ -17,6 +17,6 @@ import org.apache.ibatis.type.Alias;
 @Alias("frontCategoryDeleteRequest")
 public class FrontCategoryDeleteRequest extends BaseRequest {
 
-	@Schema(description = "", example = "")
+	@Schema(description = "카테고리 시퀀스", example = "1")
 	private Long categorySeq;
 }
