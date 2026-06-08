@@ -45,6 +45,11 @@ public class FrontTopicService {
 		return mapper.selectFrontTopicList(req);
 	}
 
+	public List<FrontTopicPickListResponse> pickList(FrontTopicPickListRequest req) {
+		MapperUtil.bindMemberSeqFromLogin(req);
+		return mapper.selectFrontTopicPickList(req);
+	}
+
 	public EPageInfo<FrontTopicSelectPageResponse> page(FrontTopicSelectPageRequest req) {
 		MapperUtil.bindMemberSeqFromLogin(req);
 		PageHelper.startPage(req.getCurrentPage(), 10);

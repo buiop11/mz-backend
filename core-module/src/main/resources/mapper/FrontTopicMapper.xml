@@ -84,6 +84,7 @@
 				</otherwise>
 			</choose>
 		</if>
+		ORDER BY t.REGISTRATION_DT DESC
 	</select>
 
 	<!-- 안건 Page 조회 -->
@@ -138,6 +139,60 @@
 				</otherwise>
 			</choose>
 		</if>
+		ORDER BY t.REGISTRATION_DT DESC
+	</select>
+
+	<!-- PICK 완료 로그: TOPIC(STATUS=PICK) + TOPIC.CANDIDATE_SEQ로 CANDIDATE 조인, 단일 row -->
+	<select id="selectFrontTopicPickList" parameterType="frontTopicPickListRequest" resultType="frontTopicPickListResponse">
+		/* com.matjzing.mapper.FrontTopicMapper.selectFrontTopicPickList */
+		SELECT
+			  t.TOPIC_SEQ AS topicSeq
+			, <include refid="ownerMemberSeqSubquery"/> AS memberSeq
+			, t.CATEGORY_SEQ AS categorySeq
+			, (SELECT NAME FROM CATEGORY WHERE CATEGORY_SEQ = t.CATEGORY_SEQ AND USE_YN = TRUE) AS categoryName
+			, c.CANDIDATE_SEQ AS candidateSeq
+			, t.EMOJI AS emoji
+			, t.TITLE AS title
+			, t.STATUS AS status
+			, (t.STATUS = 'PICK') AS picked
+			, t.GOOGLE_EVENT_ID AS googleEventId
+			, t.UPDATE_DT AS updateDt
+			, c.NAME AS name
+			, c.INFO AS info
+			, c.PRICE AS price
+			, c.PICK_DATE AS pickDate
+			, c.IMAGE_URL AS imageUrl
+			, c.LINK_URL AS linkUrl
+			, c.IS_FIXED AS fixed
+			, c.MEMBER_SEQ AS proposerMemberSeq
+		FROM
+			TOPIC t
+			INNER JOIN CANDIDATE c
+		ON
+			c.CANDIDATE_SEQ = t.CANDIDATE_SEQ
+		AND
+			c.TOPIC_SEQ = t.TOPIC_SEQ
+		WHERE
+			t.STATUS = 'PICK'
+			AND t.CANDIDATE_SEQ IS NOT NULL
+			AND t.USE_YN = TRUE
+			AND c.USE_YN = TRUE
+		<choose>
+			<when test="memberSeq != null and memberSeq != 0">
+				AND EXISTS (
+					SELECT 1
+					FROM TOPIC_MEMBER tm
+					WHERE tm.TOPIC_SEQ = t.TOPIC_SEQ
+					  AND tm.MEMBER_SEQ = #{memberSeq}
+					  AND tm.USE_YN = TRUE
+				)
+			</when>
+			<otherwise>
+				AND 1 = 0
+			</otherwise>
+		</choose>
+		ORDER BY
+			t.UPDATE_DT DESC, t.TOPIC_SEQ DESC
 	</select>
 
 

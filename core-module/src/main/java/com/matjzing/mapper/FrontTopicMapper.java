@@ -16,6 +16,7 @@ import java.util.List;
 public interface FrontTopicMapper {
 
 	List<FrontTopicSelectListResponse> selectFrontTopicList(FrontTopicSelectListRequest req);
+	List<FrontTopicPickListResponse> selectFrontTopicPickList(FrontTopicPickListRequest req);
 	Page<FrontTopicSelectPageResponse> selectFrontTopicPage(FrontTopicSelectPageRequest req);
 	FrontTopicSelectResponse selectFrontTopic(FrontTopicSelectRequest req);
 	Long insertFrontTopic(FrontTopicInsertRequest req);

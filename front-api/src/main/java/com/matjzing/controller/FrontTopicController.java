@@ -48,6 +48,23 @@ public class FrontTopicController {
 		return RestUtil.ok(service.list(req));
 	}
 
+	@GetMapping("/pick/list")
+	@Operation(summary ="PICK 완료 로그 목록", description =
+		  "## Description ##\n"
+		+ "회원(memberSeq)이 참여한 안건 중 PICK 완료된 항목을 조회합니다.\n"
+		+ "TOPIC.CANDIDATE_SEQ로 CANDIDATE를 조인해 **안건+선정후보를 하나의 객체**로 배열에 담아 반환합니다.\n"
+		+ "JWT가 있으면 memberSeq 쿼리 파라미터 생략 가능.\n"
+	)
+	public ResponseEntity<ResponseModel<List<FrontTopicPickListResponse>>> pickList(
+			@Parameter(description = "회원 MEMBER_SEQ (JWT 있으면 생략 가능)")
+			@RequestParam(required = false) Long memberSeq,
+			@Parameter(hidden = true) @ModelAttribute FrontTopicPickListRequest req) {
+		if (memberSeq != null) {
+			req.setMemberSeq(memberSeq);
+		}
+		return RestUtil.ok(service.pickList(req));
+	}
+
 	@GetMapping
 	@Operation(summary ="안건 Page 조회", description =
 		  "## Description ##\n"
