@@ -29,5 +29,7 @@ public interface FrontTopicMapper {
 
 	Long updateFrontTopic(FrontTopicUpdateRequest req);
 	Long deleteFrontTopic(FrontTopicDeleteRequest req);
-	
+
+	Long revertPickByTopicSeq(FrontTopicPickRevertRequest req);
+
 }

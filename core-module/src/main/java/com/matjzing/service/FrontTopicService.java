@@ -208,4 +208,14 @@ public class FrontTopicService {
 		}
 	}
 
+	@Transactional
+	public void revertPick(FrontTopicPickRevertRequest req) {
+		MapperUtil.bindMemberSeqFromLogin(req);
+		MapperUtil.setBaseRequest(req);
+		Long affected = mapper.revertPickByTopicSeq(req);
+		if (affected == null || affected.longValue() == 0L) {
+			throw new NotfoundException();
+		}
+	}
+
 }

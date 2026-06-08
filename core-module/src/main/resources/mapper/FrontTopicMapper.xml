@@ -387,4 +387,42 @@
 		</choose>
 	</update>
 
+	<!-- PICK 번복: TOPIC STATUS=VOTING, CANDIDATE_SEQ=NULL + 선정 후보 IS_FIXED=FALSE -->
+	<update id="revertPickByTopicSeq" parameterType="frontTopicPickRevertRequest">
+		/* com.matjzing.mapper.FrontTopicMapper.revertPickByTopicSeq */
+		UPDATE TOPIC t
+		INNER JOIN CANDIDATE c ON c.CANDIDATE_SEQ = t.CANDIDATE_SEQ AND c.TOPIC_SEQ = t.TOPIC_SEQ
+		SET
+			  t.UPDATER_SEQ = #{updaterSeq}
+			, t.UPDATER_IP = #{updaterIp}
+			, t.UPDATE_DT = NOW(3)
+			, t.STATUS = 'VOTING'
+			, t.CANDIDATE_SEQ = NULL
+			, c.UPDATER_SEQ = #{updaterSeq}
+			, c.UPDATER_IP = #{updaterIp}
+			, c.UPDATE_DT = NOW(3)
+			, c.IS_FIXED = FALSE
+		WHERE
+			t.TOPIC_SEQ = #{topicSeq}
+			AND t.STATUS = 'PICK'
+			AND t.CANDIDATE_SEQ IS NOT NULL
+			AND t.USE_YN = TRUE
+			AND c.USE_YN = TRUE
+		<choose>
+			<when test="memberSeq != null">
+				AND EXISTS (
+					SELECT 1
+					FROM TOPIC_MEMBER tm
+					WHERE tm.TOPIC_SEQ = t.TOPIC_SEQ
+					  AND tm.MEMBER_SEQ = #{memberSeq}
+					  AND tm.ROLE_TYPE = 'OWNER'
+					  AND tm.USE_YN = TRUE
+				)
+			</when>
+			<otherwise>
+				AND 1 = 0
+			</otherwise>
+		</choose>
+	</update>
+
 </mapper>

@@ -111,6 +111,22 @@ public class FrontTopicController {
 		return RestUtil.ok();
 	}
 
+	@PostMapping("/{topicSeq}/pick/revert")
+	@Operation(summary ="PICK 번복", description =
+		  "## Description ##\n"
+		+ "후보 결정(PICK)을 취소하고 투표 상태로 되돌립니다.\n"
+		+ "- TOPIC: STATUS='VOTING', CANDIDATE_SEQ=NULL\n"
+		+ "- CANDIDATE(선정 후보): IS_FIXED=FALSE\n"
+		+ "권한: 해당 TOPIC의 OWNER만 가능 (TOPIC_MEMBER ROLE_TYPE=OWNER)\n"
+	)
+	public ResponseEntity<ResponseModel<EmptyResponse>> revertPick(
+			@PathVariable("topicSeq") Long topicSeq,
+			@Parameter(hidden = true) FrontTopicPickRevertRequest req) {
+		req.setTopicSeq(topicSeq);
+		service.revertPick(req);
+		return RestUtil.ok();
+	}
+
 	@PutMapping
 	@Operation(summary ="안건 수정", description =
 		  "## Description ##\n"
