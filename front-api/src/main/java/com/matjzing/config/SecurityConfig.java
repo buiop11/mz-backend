@@ -51,6 +51,10 @@ public class SecurityConfig {
 			,"/api/candidate/**"
 			,"/api/comment"
 			,"/api/comment/**"
+			,"/api/file/upload"
+			,"/api/file/uploads"
+			,"/api/file/download/**"
+			,"/candidate/**"   // 후보 파일 보여주기 경로
 	};
 
 	@Bean

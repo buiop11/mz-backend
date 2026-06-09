@@ -3,6 +3,7 @@ package com.matjzing.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.matjzing.security.JwtService;
 import com.matjzing.service.FrontServiceCheckService;
@@ -22,6 +23,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				.addPathPatterns("/api/**")
 				.addPathPatterns("/swagger-ui.html")
 				.addPathPatterns("/view/login");
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {  // 로컬에서 후보군 이미지 보여주기 연결
+		registry.addResourceHandler("/candidate/**")
+				.addResourceLocations("file:///C:/app/file/candidate/");
 	}
 
 }
