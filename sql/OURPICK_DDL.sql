@@ -291,3 +291,27 @@ CREATE TABLE `EXCALENDAR` (
   PRIMARY KEY (`CALENDAR_SEQ`)
 ) COMMENT='외부_캘린더';
 
+-- ============================================
+-- 첨부 파일 (ATTACHING_FILE)
+-- ============================================
+CREATE TABLE `ATTACHING_FILE` (
+  `ATTACHING_FILE_SEQ`  INT            NOT NULL AUTO_INCREMENT                 COMMENT '첨부_파일_시퀀스',
+  `TARGET_CD`           VARCHAR(20)    NOT NULL                                COMMENT '타겟_코드',
+  `TARGET_SEQ`          INT            NOT NULL                                COMMENT '타겟_시퀀스',
+  `FILE_ORIGINAL_NAME`  VARCHAR(255)   NOT NULL                                COMMENT '파일_원본_명',
+  `FILE_PATH`           VARCHAR(255)   NOT NULL                                COMMENT '파일_경로',
+  `FILE_SIZE`           INT            NOT NULL                                COMMENT '파일_사이즈',
+  `FILE_EXTENSION_NAME` VARCHAR(255)   NOT NULL                                COMMENT '파일_확장자_명',
+  `OPEN_FILE_YN`        TINYINT(1)     NOT NULL DEFAULT 1                      COMMENT '공개_파일_여부',
+  `SORTING_ORDER`       INT            NULL                                    COMMENT '정렬_순서',
+  `USE_YN`              TINYINT(1)     NOT NULL DEFAULT 1                      COMMENT '사용_여부',
+  `REGISTER_SEQ`        INT            NOT NULL                                COMMENT '등록자_시퀀스',
+  `REGISTER_IP`         VARCHAR(100)   NULL                                    COMMENT '등록자_IP',
+  `REGISTRATION_DT`     DATETIME(3)    NOT NULL DEFAULT CURRENT_TIMESTAMP(3)   COMMENT '등록_일시',
+  `UPDATER_SEQ`         INT            NOT NULL                                COMMENT '수정자_시퀀스',
+  `UPDATER_IP`          VARCHAR(100)   NULL                                    COMMENT '수정자_IP',
+  `UPDATE_DT`           DATETIME(3)    NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '수정_일시',
+  PRIMARY KEY (`ATTACHING_FILE_SEQ`),
+  KEY `IDX_ATTACHING_FILE_TARGET` (`TARGET_CD`, `TARGET_SEQ`, `USE_YN`)
+) COMMENT='첨부_파일';
+
