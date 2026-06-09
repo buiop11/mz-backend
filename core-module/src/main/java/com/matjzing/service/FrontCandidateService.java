@@ -32,7 +32,11 @@ public class FrontCandidateService {
 	private final AttachingFileMapper attachingFileMapper;
 
 	public List<FrontCandidateSelectListResponse> list(FrontCandidateSelectListRequest req) {
-		return mapper.selectFrontCandidateList(req);
+		List<FrontCandidateSelectListResponse> list = mapper.selectFrontCandidateList(req);
+		for (FrontCandidateSelectListResponse response : list) {
+			response.setFileList(commonFileService.getFileList(true, FileTargetCd.candidate, response.getCandidateSeq()));
+		}
+		return list;
 	}
 
 	public EPageInfo<FrontCandidateSelectPageResponse> page(FrontCandidateSelectPageRequest req) {

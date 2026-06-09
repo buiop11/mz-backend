@@ -1,10 +1,12 @@
 package com.matjzing.dto.candidate;
 
+import com.matjzing.dto.file.FileSelectResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -18,6 +20,9 @@ import java.time.LocalDateTime;
 @Schema(description = "후보 List 조회 응답 모델")
 @Alias("frontCandidateSelectListResponse")
 public class FrontCandidateSelectListResponse {
+
+	@Schema(description = "파일 목록")
+	private List<FileSelectResponse> fileList;
 
 	@Schema(description = "", example = "")
 	private Long candidateSeq;
