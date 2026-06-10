@@ -26,7 +26,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	}
 
 	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {  // 로컬에서 후보군 이미지 보여주기 연결
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		// 로컬에서 후보군 이미지 보여주기 연결, nginx가 해야할 일을 springboot가 하게 만든 것
 		registry.addResourceHandler("/candidate/**")
 				.addResourceLocations("file:///C:/app/file/candidate/");
 	}
