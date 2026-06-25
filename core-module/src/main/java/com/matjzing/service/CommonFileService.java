@@ -20,8 +20,12 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -324,6 +328,64 @@ public class CommonFileService {
             }
         }
         return listFile;
+    }
+
+    /**
+     * URL에서 이미지를 다운로드하여 temp 디렉토리에 저장한다.
+     * 반환된 FileUploadResponse는 uploadS3() 호출 후 insertFile()에 전달하면 된다.
+     */
+    public FileUploadResponse saveTempFromUrl(String imageUrl) throws Exception {
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.ALWAYS)
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+
+        HttpResponse<InputStream> response = client.send(
+                HttpRequest.newBuilder()
+                        .uri(URI.create(imageUrl))
+                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                        .timeout(Duration.ofSeconds(30))
+                        .GET()
+                        .build(),
+                HttpResponse.BodyHandlers.ofInputStream()
+        );
+
+        String contentType = response.headers().firstValue("content-type").orElse("image/jpeg");
+        String ext = resolveImageExtension(contentType, imageUrl);
+
+        String urlFilePath = temp + UUID.randomUUID() + "." + ext;
+        Path locationPath = dirLocation.resolve(urlFilePath);
+        makeDirectory(temp);
+
+        try (InputStream in = response.body()) {
+            Files.copy(in, locationPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        FileUploadResponse fileInfo = new FileUploadResponse();
+        fileInfo.setFileExtensionName(contentType.split(";")[0].trim());
+        fileInfo.setFilePath("/" + urlFilePath);
+        fileInfo.setFileOriginalName("image." + ext);
+        fileInfo.setFileSize(locationPath.toFile().length());
+        fileInfo.setFileFullPath(locationPath.toFile().getPath());
+
+        return fileInfo;
+    }
+
+    private String resolveImageExtension(String contentType, String url) {
+        if (contentType != null) {
+            String ct = contentType.split(";")[0].trim().toLowerCase();
+            if (ct.contains("jpeg") || ct.contains("jpg")) return "jpg";
+            if (ct.contains("png"))  return "png";
+            if (ct.contains("gif"))  return "gif";
+            if (ct.contains("webp")) return "webp";
+            if (ct.contains("bmp"))  return "bmp";
+        }
+        String path = url.split("\\?")[0];
+        if (path.contains(".")) {
+            String ext = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
+            if (ext.matches("jpg|jpeg|png|gif|webp|bmp")) return "jpeg".equals(ext) ? "jpg" : ext;
+        }
+        return "jpg";
     }
 
     @Cacheable(value = RedisCacheKey.FILE, cacheManager = "cacheManager10minutes", keyGenerator = "redisCacheKeyGenerator")

@@ -3,6 +3,7 @@ package com.matjzing.controller;
 import com.matjzing.config.TagsConfig;
 import com.matjzing.dto.common.*;
 import com.matjzing.dto.candidate.*;
+import com.matjzing.dto.file.FileUploadResponse;
 import com.matjzing.service.FrontCandidateService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -118,6 +119,17 @@ public class FrontCandidateController {
 		req.setCandidateSeq(candidateSeq);
 		service.pick(req);
 		return RestUtil.ok();
+	}
+
+	@PostMapping("/scrape-image")
+	@Operation(summary ="링크에서 대표 이미지 추출 및 저장", description =
+		  "## Description ##\n"
+		+ "상품 페이지 URL(예: https://www.musinsa.com/products/5887859)에서\n"
+		+ "og:image를 추출하여 파일 서버에 저장합니다.\n"
+		+ "반환된 FileUploadResponse를 후보 등록/수정 요청의 fileList에 포함하면 이미지가 연결됩니다.\n"
+	)
+	public ResponseEntity<ResponseModel<FileUploadResponse>> scrapeImage(@Valid @RequestBody FrontCandidateScrapeImageRequest req) throws Exception {
+		return RestUtil.ok(service.scrapeImage(req.getUrl()));
 	}
 
 }

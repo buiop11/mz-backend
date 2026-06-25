@@ -5,6 +5,7 @@ import com.matjzing.dto.common.enumeration.FileTargetCd;
 import com.matjzing.dto.candidate.*;
 import com.matjzing.dto.common.EPageInfo;
 import com.matjzing.dto.file.FileUploadDto;
+import com.matjzing.dto.file.FileUploadResponse;
 import com.matjzing.exception.NotfoundException;
 import com.matjzing.mapper.FrontCandidateMapper;
 import com.matjzing.util.MapperUtil;
@@ -13,7 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author: 김아진
@@ -130,6 +138,59 @@ public class FrontCandidateService {
 		if (affected == null || affected.longValue() == 0L) {
 			throw new NotfoundException();
 		}
+	}
+
+	/**
+	 * 상품 페이지 URL에서 og:image를 추출하여 파일 서버에 저장한다.
+	 * 반환된 FileUploadResponse를 후보 등록/수정의 fileList에 포함하면 이미지가 연결된다.
+	 */
+	public FileUploadResponse scrapeImage(String pageUrl) throws Exception {
+		if (pageUrl.startsWith("//")) pageUrl = "https:" + pageUrl;
+
+		HttpClient client = HttpClient.newBuilder()
+				.followRedirects(HttpClient.Redirect.ALWAYS)
+				.connectTimeout(Duration.ofSeconds(10))
+				.build();
+
+		HttpResponse<String> response = client.send(
+				HttpRequest.newBuilder()
+						.uri(URI.create(pageUrl))
+						.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+						.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+						.timeout(Duration.ofSeconds(30))
+						.GET()
+						.build(),
+				HttpResponse.BodyHandlers.ofString()
+		);
+
+		String imageUrl = extractOgImage(response.body());
+		if (imageUrl == null) {
+			throw new RuntimeException("대표 이미지(og:image)를 찾을 수 없습니다: " + pageUrl);
+		}
+		if (imageUrl.startsWith("//")) imageUrl = "https:" + imageUrl;
+
+		FileUploadResponse tempFile = commonFileService.saveTempFromUrl(imageUrl);
+		commonFileService.uploadS3(tempFile);
+
+		return tempFile;
+	}
+
+	private String extractOgImage(String html) {
+		// property → content 순서
+		Pattern p1 = Pattern.compile(
+				"<meta[^>]+property=[\"']og:image[\"'][^>]+content=[\"']([^\"']+)[\"']",
+				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m1 = p1.matcher(html);
+		if (m1.find()) return m1.group(1).trim();
+
+		// content → property 순서 (일부 사이트)
+		Pattern p2 = Pattern.compile(
+				"<meta[^>]+content=[\"']([^\"']+)[\"'][^>]+property=[\"']og:image[\"']",
+				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m2 = p2.matcher(html);
+		if (m2.find()) return m2.group(1).trim();
+
+		return null;
 	}
 
 }
