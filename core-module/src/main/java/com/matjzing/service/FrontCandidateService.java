@@ -6,13 +6,13 @@ import com.matjzing.dto.candidate.*;
 import com.matjzing.dto.common.EPageInfo;
 import com.matjzing.dto.file.FileUploadDto;
 import com.matjzing.exception.NotfoundException;
-import com.matjzing.mapper.AttachingFileMapper;
 import com.matjzing.mapper.FrontCandidateMapper;
 import com.matjzing.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import java.util.List;
 
 /**
@@ -29,7 +29,6 @@ public class FrontCandidateService {
 
 	private final FrontCandidateMapper mapper;
 	private final CommonFileService commonFileService;
-	private final AttachingFileMapper attachingFileMapper;
 
 	public List<FrontCandidateSelectListResponse> list(FrontCandidateSelectListRequest req) {
 		List<FrontCandidateSelectListResponse> list = mapper.selectFrontCandidateList(req);
@@ -78,22 +77,44 @@ public class FrontCandidateService {
 		// 등록 후 등록된 일련번호로 추가 작업이 필요할 때
 		Long frontCandidateSeq = req.getCandidateSeq();
 
-		// 파일 업로드가 있는 경우
-		List<FileUploadDto> fileList = req.getFileList();
-		commonFileService.insertFileList(true, FileTargetCd.candidate, fileList.toArray(new FileUploadDto[fileList.size()-1]) , frontCandidateSeq, Integer.class);
-
+		// 단일 이미지 정책: 파일이 있는 경우 첫 번째 파일 한 건만 등록
+		FileUploadDto newFile = extractNewFile(req.getFileList());
+		if (null != newFile) {
+			commonFileService.insertFile(true, FileTargetCd.candidate, newFile, frontCandidateSeq, Integer.class);
+		}
 	}
 
 	@Transactional
 	public void update(FrontCandidateUpdateRequest req) {
 		MapperUtil.setBaseRequest(req); // BaseRequest 셋팅
 
-		// 파일 업로드가 있는 경우
-		Long frontCandidateSeq = req.getCandidateSeq();
 		List<FileUploadDto> fileList = req.getFileList();
-		commonFileService.insertFileList(true, FileTargetCd.candidate, fileList.toArray(new FileUploadDto[fileList.size()-1]) , frontCandidateSeq, Integer.class);
+		FileUploadDto newFile = extractNewFile(fileList);
+
+		if (null != newFile) {
+			// 단일 이미지 정책: 새 파일 등록 후 기존 활성 파일 전체 비활성화(USE_YN=FALSE)
+			commonFileService.replaceFile(true, FileTargetCd.candidate, newFile, req.getCandidateSeq());
+		} else if (!ObjectUtils.isEmpty(fileList)) {
+			// 새 파일 없이 삭제 요청(delYn=true)만 있는 경우: 기존 삭제 로직으로 처리
+			commonFileService.insertFileList(true, FileTargetCd.candidate, fileList.toArray(new FileUploadDto[0]), req.getCandidateSeq(), Integer.class);
+		}
+		// 파일이 아예 안 넘어온 경우는 기존 이미지 유지
 
 		mapper.updateFrontCandidate(req); // 수정처리
+	}
+
+	/**
+	 * 파일 목록에서 신규 업로드 파일(attachingFileSeq 없음, 삭제 표시 아님)의 첫 번째 건을 추출한다.
+	 * 후보는 이미지를 한 장만 사용하므로 그 외 신규 파일은 무시된다.
+	 */
+	private FileUploadDto extractNewFile(List<FileUploadDto> fileList) {
+		if (ObjectUtils.isEmpty(fileList)) {
+			return null;
+		}
+		return fileList.stream()
+				.filter(f -> null == f.getAttachingFileSeq() && (null == f.getDelYn() || !f.getDelYn()))
+				.findFirst()
+				.orElse(null);
 	}
 
 	@Transactional

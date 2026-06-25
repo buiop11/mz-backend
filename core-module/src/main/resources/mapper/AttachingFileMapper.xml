@@ -77,6 +77,22 @@
 			ATTACHING_FILE_SEQ = #{attachingFileSeq}
 	</update>
 
+	<!-- 첨부_파일 타겟 기준 일괄 비활성화 (단일 이미지 정책: 새로 등록한 파일 제외 전체 USE_YN=FALSE 처리) -->
+	<update id="deactivateAttachingFileByTarget" parameterType="fileInsertRequest">
+		/* com.matjzing.mapper.AttachingFileMapper.deactivateAttachingFileByTarget */
+		UPDATE ATTACHING_FILE SET
+			  UPDATER_SEQ = #{updaterSeq}
+			, UPDATE_DT = NOW(3)
+			, USE_YN = FALSE
+		WHERE
+			TARGET_CD = #{targetCd}
+			AND TARGET_SEQ = #{targetSeq}
+			AND USE_YN = TRUE
+		<if test="attachingFileSeq != null">
+			AND ATTACHING_FILE_SEQ != #{attachingFileSeq}
+		</if>
+	</update>
+
 	<!--    파일 목록 조회-->
 	<select id="getFileList" parameterType="fileSelectRequest" resultType="fileSelectResponse">
 		/* com.matjzing.mapper.AttachingFileMapper.getFileList */

@@ -141,6 +141,28 @@ public class CommonFileService {
     }
 
 
+    /**
+     * 단일 이미지 정책용 파일 교체.
+     * 새 파일을 등록한 뒤, 동일 타겟(targetCd + targetSeq)의 나머지 활성 파일을 모두 비활성화(USE_YN=FALSE) 한다.
+     * 물리 파일은 삭제하지 않으며, USE_YN=FALSE 파일은 추후 배치로 정리한다.
+     *
+     * @param openFileYn 공개 파일 여부
+     * @param targetCd   파일 타겟 코드 (예: candidate)
+     * @param dto        새로 등록할 파일 (temp 경로 상태)
+     * @param targetSeq  타겟 일련번호
+     */
+    public void replaceFile(Boolean openFileYn, FileTargetCd targetCd, FileUploadDto dto, Long targetSeq) {
+        FileInsertRequest inserted = insertFile(openFileYn, targetCd, dto, targetSeq, FileInsertRequest.class);
+
+        FileInsertRequest deactivate = new FileInsertRequest();
+        deactivate.setTargetCd(targetCd);
+        deactivate.setTargetSeq(targetSeq);
+        deactivate.setAttachingFileSeq(inserted.getAttachingFileSeq()); // 방금 등록한 새 파일은 비활성화 대상에서 제외
+        MapperUtil.setBaseRequest(deactivate);
+
+        attachingFileMapper.deactivateAttachingFileByTarget(deactivate);
+    }
+
     public String insertEditorFileList(Long targetSeq, FileTargetCd targetCd, String bodyText, List<FileUploadDto> bodyTextImageList) {
         String replacedBodyText = bodyText;
         if (!ObjectUtils.isEmpty(bodyTextImageList)) {

@@ -14,6 +14,8 @@ public interface AttachingFileMapper {
     int insertAttachingFile(FileInsertRequest req);
     @CacheEvict(value = RedisCacheKey.FILE_DEL, allEntries = true, cacheManager = "cacheManager")
     int deleteAttachingFile(FileInsertRequest req);
+    @CacheEvict(value = RedisCacheKey.FILE_DEL, allEntries = true, cacheManager = "cacheManager")
+    int deactivateAttachingFileByTarget(FileInsertRequest req);
     @Cacheable(value = RedisCacheKey.FILE, cacheManager = "cacheManager10minutes", keyGenerator = "redisCacheKeyGenerator")
     FileSelectResponse selectFile(FileInsertRequest req);
 
